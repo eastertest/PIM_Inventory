@@ -1,0 +1,5 @@
+export SECRET_KEY = SecretKeyHere
+export SQL_NAME=sqlDatabaseNameHere
+export SQL_USER=sqlUsernameHere
+export SQL_PASSWORD=sqlPasswordHere
+export ALLOWED_HOSTS=IPAddressHere
