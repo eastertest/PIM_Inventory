@@ -35,7 +35,6 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
 # Application definition
 
 INSTALLED_APPS = [
-	'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,7 +58,7 @@ ROOT_URLCONF = 'pim.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["users/templates/"],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,10 +126,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-LOGIN_REDIRECT_URL = "dashboard"
-
-LOGOUT_REDIRECT_URL = "dashboard"
-
-EMAIL_HOST = "localhost"
-EMAIL_PORT = 1025
