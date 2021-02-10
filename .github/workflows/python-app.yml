@@ -33,5 +33,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run migrations
       run: python manage.py migrate
+      env:
+        SECRET_KEY: test
     - name: Run tests
-      run: python manage.py testt
+      run: python manage.py test
+      env:
+        SECRET_KEY: test
