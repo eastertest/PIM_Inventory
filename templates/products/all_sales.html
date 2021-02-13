@@ -1,0 +1,53 @@
+{% extends 'products/base.html'%} {% block content%}
+<br></br>
+
+<div class = "container">
+<h1 class = "text-center">TOTAL SALES MADE</h1><br>
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Total Amount</th>
+
+      </tr>
+    </thead>  
+    <tbody>
+      <tr>    
+        <td>${{total}}</td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+<br></br>
+
+<div class = "container">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+		<th scope="col">Date Sold</th>
+        <th scope="col">Customer name</th>
+        <th scope="col">Item Bought</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Unit Price($)</th>
+        <th scope="col">Total</th>
+
+
+      </tr>
+    </thead>
+    {% for sale in sales %}
+    <tbody>
+      <tr>
+		<td>{{sale.sale_date | title}}</td>
+        <td>{{sale.customer | title}}</td>
+        <td>{{sale.product | title}}</td>
+        <td>{{sale.quantity_issued}}</td>
+        <td>${{product.unit_price}}</td>
+        <td>${{sale.get_total}}</td>
+
+
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</div>
+{% endblock%}
