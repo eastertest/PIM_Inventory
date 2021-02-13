@@ -1,0 +1,57 @@
+{% extends 'products/base.html'%} {% block content%}
+<br></br>
+
+<div class = "container">
+  <h1 class= "text-center">ITEMS IN STOCK</h1>
+  <br>
+  
+  <div class = "container">
+    <form action = "" method = "GET">
+      {{product_filters.form}}
+      <input 
+      type = "submit"
+      value = "Search Products"
+      class="btn btn-secondary btn"/>
+    </form>
+	
+  </div>
+  
+  
+  
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Item Name</th>
+		<th scope = "col">Description</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Unit Price($)</th>
+      </tr>
+    </thead>
+    {% for product in products%}
+    <tbody>
+      <tr>
+        
+		<td>{{product.name}}</td>
+		<td>{{product.description}}</td>
+        <td>{{product.total_quantity}}</td>
+        <td>${{product.unit_price}}</td>
+        <td>
+		
+		<a href="{% url 'product_detail' product.id %}">
+                <input
+                type="submit"
+                value="SELL / ADD"
+                class="btn btn-secondary btn"
+                type="button"/>
+		</a>
+		
+		</td>
+		
+		
+		
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</div>
+{% endblock%}
