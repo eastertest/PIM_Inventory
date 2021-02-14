@@ -1,4 +1,3 @@
-
 from django.forms import ModelForm
 from .models import *
 
@@ -6,10 +5,10 @@ from .models import *
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['name','description','unit_price','total_quantity']		
+        fields = ['name','description','unit_price','total_quantity']
 
 
-class AddForm(ModelForm):
+class RestockForm(ModelForm):
     class Meta:
         model = Restock
         fields = ['order_date','quantity_ordered','quantity_received','vendor','vendor_cost','product']
