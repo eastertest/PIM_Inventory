@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import datetime
+from django.db.models import Sum
 
 
 class Product(models.Model):
@@ -8,6 +9,15 @@ class Product(models.Model):
     description = models.CharField(max_length=50, null=True, blank=True)
     unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
     total_quantity = models.IntegerField(default=0, null=True, blank=True)
+
+    def quantity(self):
+        restocked = Restock.objects.filter(product=self).aggregate(Sum('quantity_received'))['quantity_received__sum']
+        if restocked == None:
+            restocked = 0;
+        sold = Sale.objects.filter(product=self).aggregate(Sum('quantity_issued'))['quantity_issued__sum']
+        if sold == None:
+            sold = 0;
+        return restocked - sold
 
     def __str__(self):
         return self.name
@@ -40,3 +50,6 @@ class Restock(models.Model):
     quantity_received = models.IntegerField(default=0, null=True, blank=True)
     vendor = models.CharField(max_length=50, null=True, blank=True)
     vendor_cost = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
+
+    def __str__(self):
+        return self.product.name
