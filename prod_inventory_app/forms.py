@@ -5,16 +5,16 @@ from .models import *
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['name','description','unit_price','total_quantity']
+        fields = ['name', 'description', 'unit_price', 'total_quantity']
 
 
 class RestockForm(ModelForm):
     class Meta:
         model = Restock
-        fields = ['order_date','quantity_ordered','quantity_received','vendor','vendor_cost','product']
+        fields = ['order_date', 'quantity_ordered', 'quantity_received', 'vendor', 'vendor_cost']
 
 
 class SaleForm(ModelForm):
     class Meta:
         model = Sale
-        fields = ["sale_date", "product", "quantity_issued", "payment_received", "customer"]
+        fields = ['sale_date', 'quantity_issued', 'payment_received', 'customer']
