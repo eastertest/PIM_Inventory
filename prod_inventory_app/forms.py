@@ -17,4 +17,4 @@ class RestockForm(ModelForm):
 class SaleForm(ModelForm):
     class Meta:
         model = Sale
-        fields = ['sale_date', 'quantity_issued', 'payment_received', 'customer']
+        fields = ['sale_date', 'quantity_issued', 'payment_received', 'customer', 'unit_price']
