@@ -1,15 +1,14 @@
-{% extends 'products/base.html'%} 
-{% load crispy_forms_tags%} 
+{% extends 'prod_inventory_app/base.html'%}
+{% load crispy_forms_tags%}
 {% load static %}
 {% block content%}
 <br/>
 
 <div class="container">
   <form method="POST" action = "">
-    <h1 class = "text-center
-    ">SALES FORM</h1><br>
-    {% csrf_token %} 
-    {{sales_form | crispy}}
+    <h1 class = "text-center">ADD ITEM FORM</h1><br>
+    {% csrf_token %}
+    {{form.as_p}}
     <input type = "submit" class="btn btn-secondary btn"type="button">
   </form>
 </div>

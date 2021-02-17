@@ -1,4 +1,4 @@
-{% extends 'products/base.html'%}
+{% extends 'prod_inventory_app/base.html'%}
 {% load crispy_forms_tags%}
 {% load static %}
 {% block content%}
@@ -6,9 +6,10 @@
 
 <div class="container">
   <form method="POST" action = "">
-    <h1 class = "text-center">ADD ITEM FORM</h1><br>
+    <h1 class = "text-center
+    ">SALES FORM</h1><br>
     {% csrf_token %}
-    {{form.as_p}}
+    {{sales_form | crispy}}
     <input type = "submit" class="btn btn-secondary btn"type="button">
   </form>
 </div>
