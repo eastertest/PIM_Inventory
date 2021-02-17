@@ -11,7 +11,7 @@ def home(request):
     product_filters = ProductFilter(request.GET, queryset=products)
     products = product_filters.qs
 
-    return render(request, 'products/index.html', {
+    return render(request, 'prod_inventory_app/index.html', {
         'products': products, 'product_filters': product_filters,
     })
 
@@ -19,7 +19,7 @@ def home(request):
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
     return render(request,
-                  'products/product_detail.html',
+                  'prod_inventory_app/product_detail.html',
                   {'product': product})
 
 
@@ -32,7 +32,7 @@ def add_product(request):
             new_product.save()
             return redirect('home')
 
-    return render(request, 'products/add_product.html', {'form': form})
+    return render(request, 'prod_inventory_app/add_product.html', {'form': form})
 
 
 def add_to_stock(request, pk):
@@ -54,7 +54,7 @@ def add_to_stock(request, pk):
             product1.save()
             return redirect('home')
 
-    return render(request, 'products/add_to_stock.html', {'form': form})
+    return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form})
 
 
 def sell_item(request, pk):
@@ -76,17 +76,17 @@ def sell_item(request, pk):
             product1.save()
             return redirect('receipt')
 
-    return render(request, 'products/issue_item.html', {'sales_form': form, })
+    return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, })
 
 
 def receipt(request):
     sales = Sale.objects.all().order_by('-id')
-    return render(request, 'products/receipt.html', {'sales': sales, })
+    return render(request, 'prod_inventory_app/receipt.html', {'sales': sales, })
 
 
 def receipt_detail(request, receipt_id):
     receipt = Sale.objects.get(id=receipt_id)
-    return render(request, 'products/receipt_detail.html', {'receipt': receipt})
+    return render(request, 'prod_inventory_app/receipt_detail.html', {'receipt': receipt})
 
 
 def all_sales(request):
@@ -94,7 +94,7 @@ def all_sales(request):
     total = sum([product.quantity_issued * product.unit_price for product in sales])
     change = sum([items.get_change() for items in sales])
     net = total - change
-    return render(request, 'products/all_sales.html',
+    return render(request, 'prod_inventory_app/all_sales.html',
                   {
                       'sales': sales,
                       'total': total,
