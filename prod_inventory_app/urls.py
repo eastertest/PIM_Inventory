@@ -12,4 +12,5 @@ path('add_to_stock/<str:pk>/', views.add_to_stock, name='add_to_stock'),
 path('all_sales/', views.all_sales, name = 'all_sales'),
 path('receipt/', views.receipt, name = "receipt"),
 path('receipt/<int:receipt_id>/', views.receipt_detail, name='receipt_detail'),
+path('search/', views.search, name='search'),
 ]

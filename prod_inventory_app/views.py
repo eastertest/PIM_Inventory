@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from prod_inventory_app.forms import ProductForm, RestockForm, SaleForm
-from prod_inventory_app.filters import ProductFilter
+from prod_inventory_app.filters import ProductFilter, RestockFilter, SaleFilter
 import datetime
 
 from .models import Product, Restock, Sale
@@ -101,3 +101,23 @@ def all_sales(request):
                       'change': change,
                       'net': net,
                   })
+
+
+def search(request):
+    product = Product.objects.all().order_by('-id')
+    restock = Restock.objects.all().order_by('-id')
+    sale = Sale.objects.all().order_by('-id')
+
+    product_filters = ProductFilter(request.GET, queryset=product)
+    restock_filters = RestockFilter(request.GET, queryset=restock)
+    sale_filters = SaleFilter(request.GET, queryset=sale)
+
+    products = product_filters.qs
+    restock = restock_filters.qs
+    sale = sale_filters.qs
+
+    return render(request, 'prod_inventory_app/search_data.html', {
+        'product': products, 'product_filters': product_filters,
+        'restock': restock, 'restock_filters': restock_filters,
+        'sale': sale, 'sale_filters': sale_filters,
+    })
