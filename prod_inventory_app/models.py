@@ -7,32 +7,30 @@ from django.db.models import Sum
 class Product(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
     description = models.CharField(max_length=50, null=True, blank=True)
-    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
-    total_quantity = models.IntegerField(default=0, null=True, blank=True)
 
     def quantity(self):
-        restocked = Restock.objects.filter(product=self).aggregate(Sum('quantity_received'))['quantity_received__sum']
-        if restocked == None:
-            restocked = 0;
-        sold = Sale.objects.filter(product=self).aggregate(Sum('quantity_issued'))['quantity_issued__sum']
+        received = Received.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
+        if received == None:
+            received = 0;
+        sold = Sale.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
         if sold == None:
             sold = 0;
-        return restocked - sold
+        return received - sold
 
     def __str__(self):
         return self.name
 
 
 class Sale(models.Model):
-    sale_date = models.DateField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     customer = models.CharField(max_length=50, null=True, blank=True)
-    quantity_issued = models.IntegerField(default=0, null=True, blank=True)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
     unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
     payment_received = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
 
     def get_total(self):
-        total = self.quantity_issued * self.unit_price
+        total = self.quantity * self.unit_price
         return (total)
 
     def get_change(self):
@@ -43,13 +41,12 @@ class Sale(models.Model):
         return self.product.name
 
 
-class Restock(models.Model):
-    order_date = models.DateField(default=datetime.date.today)
+class Received(models.Model):
+    date = models.DateField(default=datetime.date.today)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity_ordered = models.IntegerField(default=0, null=True, blank=True)
-    quantity_received = models.IntegerField(default=0, null=True, blank=True)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
     vendor = models.CharField(max_length=50, null=True, blank=True)
-    vendor_cost = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
+    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
 
     def __str__(self):
         return self.product.name

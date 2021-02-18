@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from prod_inventory_app.forms import ProductForm, RestockForm, SaleForm
-from prod_inventory_app.filters import ProductFilter, RestockFilter, SaleFilter
+from prod_inventory_app.forms import ProductForm, ReceivedForm, SaleForm
+from prod_inventory_app.filters import ProductFilter, ReceivedFilter, SaleFilter
 import datetime
 
-from .models import Product, Restock, Sale
+from .models import Product, Received, Sale
 
 
 def home(request):
@@ -38,20 +38,17 @@ def add_product(request):
 def add_to_stock(request, pk):
     today = datetime.date.today()
     product1 = Product.objects.get(id=pk)
-    restock = Restock(product=product1, order_date=today)
-    form = RestockForm(instance=restock)
+    received = Received(product=product1, date=today)
+    form = ReceivedForm(instance=received)
 
     if request.method == 'POST':
-        form = RestockForm(request.POST)
+        form = ReceivedForm(request.POST)
         if form.is_valid():
-            restock.order_date = form.cleaned_data['order_date']
-            restock.quantity_ordered = form.cleaned_data['quantity_ordered']
-            restock.quantity_received = form.cleaned_data['quantity_received']
-            restock.vendor = form.cleaned_data['vendor']
-            restock.vendor_cost = form.cleaned_data['vendor_cost']
-            product1.total_quantity += restock.quantity_received
-            restock.save()
-            product1.save()
+            received.date = form.cleaned_data['date']
+            received.quantity = form.cleaned_data['quantity']
+            received.vendor = form.cleaned_data['vendor']
+            received.unit_price = form.cleaned_data['unit_price']
+            received.save()
             return redirect('home')
 
     return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form})
@@ -60,20 +57,18 @@ def add_to_stock(request, pk):
 def sell_item(request, pk):
     today = datetime.date.today()
     product1 = Product.objects.get(id=pk)
-    sale = Sale(product=product1, sale_date=today)
+    sale = Sale(product=product1, date=today)
     form = SaleForm(instance=sale)
 
     if request.method == 'POST':
         form = SaleForm(request.POST)
         if form.is_valid():
-            sale.sale_date = form.cleaned_data['sale_date']
+            sale.date = form.cleaned_data['date']
             sale.customer = form.cleaned_data['customer']
-            sale.quantity_issued = form.cleaned_data['quantity_issued']
+            sale.quantity = form.cleaned_data['quantity']
             sale.unit_price = form.cleaned_data['unit_price']
             sale.payment_received = form.cleaned_data['payment_received']
-            product1.total_quantity -= sale.quantity_issued
             sale.save()
-            product1.save()
             return redirect('receipt')
 
     return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, })
@@ -91,8 +86,8 @@ def receipt_detail(request, receipt_id):
 
 def all_sales(request):
     sales = Sale.objects.all()
-    total = sum([product.quantity_issued * product.unit_price for product in sales])
-    change = sum([items.get_change() for items in sales])
+    total = sum([sale.quantity * sale.unit_price for sale in sales])
+    change = sum([sale.get_change() for sale in sales])
     net = total - change
     return render(request, 'prod_inventory_app/all_sales.html',
                   {
@@ -105,19 +100,19 @@ def all_sales(request):
 
 def search(request):
     product = Product.objects.all().order_by('-id')
-    restock = Restock.objects.all().order_by('-id')
+    received = Received.objects.all().order_by('-id')
     sale = Sale.objects.all().order_by('-id')
 
     product_filters = ProductFilter(request.GET, queryset=product)
-    restock_filters = RestockFilter(request.GET, queryset=restock)
+    received_filters = ReceivedFilter(request.GET, queryset=received)
     sale_filters = SaleFilter(request.GET, queryset=sale)
 
     products = product_filters.qs
-    restock = restock_filters.qs
+    received = received_filters.qs
     sale = sale_filters.qs
 
     return render(request, 'prod_inventory_app/search_data.html', {
         'product': products, 'product_filters': product_filters,
-        'restock': restock, 'restock_filters': restock_filters,
+        'received': received, 'received_filters': received_filters,
         'sale': sale, 'sale_filters': sale_filters,
     })

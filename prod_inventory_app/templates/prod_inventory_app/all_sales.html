@@ -9,9 +9,9 @@
         <th scope="col">Total Amount</th>
 
       </tr>
-    </thead>  
+    </thead>
     <tbody>
-      <tr>    
+      <tr>
         <td>${{total}}</td>
 
       </tr>
@@ -37,10 +37,10 @@
     {% for sale in sales %}
     <tbody>
       <tr>
-		<td>{{sale.sale_date | title}}</td>
+		<td>{{sale.date | title}}</td>
         <td>{{sale.customer | title}}</td>
         <td>{{sale.product | title}}</td>
-        <td>{{sale.quantity_issued}}</td>
+        <td>{{sale.quantity}}</td>
         <td>${{sale.unit_price}}</td>
         <td>${{sale.get_total}}</td>
 

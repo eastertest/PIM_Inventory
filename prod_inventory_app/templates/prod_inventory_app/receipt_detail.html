@@ -15,7 +15,6 @@
               <thead>
                 <tr>
                   <td><strong>Product Name</strong></td>
-				  
                   <td class="text-xs-center"><strong>Quantity</strong></td>
                   <td class="text-xs-right"><strong>Total($)</strong></td>
                   <td class="text-xs-right"><strong>Paid($)</strong></td>
@@ -27,7 +26,7 @@
               <tbody>
                 <tr>
                   <td>{{receipt.product | title}}</td>
-                  <td class="text-xs-center">{{receipt.quantity_issued }}</td>
+                  <td class="text-xs-center">{{receipt.quantity }}</td>
                   <td class="text-xs-center">${{receipt.get_total | title}}</td>
                   <td class="text-xs-right">${{ receipt.payment_received }}</td>
                   <td class="text-xs-right">${{ receipt.get_change }}</td>

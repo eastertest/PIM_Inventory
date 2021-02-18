@@ -16,7 +16,6 @@
       <tr>
 		<th scope="col">Product</th>
         <th scope="col">Description</th>
-        <th scope="col">Price</th>
       </tr>
     </thead>
     {% for products in product_filters.qs %}
@@ -24,7 +23,6 @@
       <tr>
 		<td>{{ products.name }}</td>
         <td>{{ products.description }}</td>
-        <td>{{ products.unit_price }}</td>
       </tr>
     </tbody>
     {% endfor %}
@@ -52,9 +50,9 @@
     {% for sales in sale_filters.qs %}
     <tbody>
       <tr>
-		<td>{{ sales.sale_date }}</td>
+		<td>{{ sales.date }}</td>
 		<td>{{ sales.product }}</td>
-        <td>{{ sales.quantity_issued }}</td>
+        <td>{{ sales.quantity }}</td>
         <td>{{ sales.unit_price }}</td>
       </tr>
     </tbody>
@@ -62,11 +60,11 @@
   </table>
 </div>
 
-<hr style="height:30px">  
+<hr style="height:30px">
 
 <div class = "container">
 <form method="get">
-    {{ restock_filters.form }}
+    {{ received_filters.form }}
     <button type="submit">Search</button>
   </form>
   <table class="table">
@@ -75,20 +73,18 @@
 	    <th scope="col">Order Date</th>
 		<th scope="col">Product</th>
         <th scope="col">Qty Received</th>
-		<th scope="col">Qty Ordered</th>
 		<th scope="col">Vendor</th>
         <th scope="col">Cost</th>
       </tr>
     </thead>
-    {% for restock in restock_filters.qs %}
+    {% for received in received_filters.qs %}
     <tbody>
       <tr>
-		<td>{{ restock.order_date }}</td>
-		<td>{{ restock.product }}</td>
-		<td>{{ restock.quantity_received }}</td>
-        <td>{{ restock.quantity_ordered }}</td>
-        <td>{{ restock.vendor }}</td>
-		<td>{{ restock.vendor_cost }}</td>
+		<td>{{ received.date }}</td>
+		<td>{{ received.product }}</td>
+		<td>{{ received.quantity }}</td>
+        <td>{{ received.vendor }}</td>
+		<td>{{ received.unit_price }}</td>
       </tr>
     </tbody>
     {% endfor %}

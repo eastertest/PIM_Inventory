@@ -22,7 +22,6 @@
         <th scope="col">Item Name</th>
 		<th scope = "col">Description</th>
         <th scope="col">Quantity</th>
-        <th scope="col">Unit Price($)</th>
       </tr>
     </thead>
     {% for product in products%}
@@ -30,8 +29,7 @@
       <tr>
 		<td>{{product.name}}</td>
 		<td>{{product.description}}</td>
-        <td>{{product.total_quantity}}</td>
-        <td>${{product.unit_price}}</td>
+        <td>{{product.quantity}}</td>
         <td>
 
 		<a href="{% url 'product_detail' product.id %}">
