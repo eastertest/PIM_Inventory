@@ -3,3 +3,6 @@ export SQL_NAME=sqlDatabaseNameHere
 export SQL_USER=sqlUsernameHere
 export SQL_PASSWORD=sqlPasswordHere
 export ALLOWED_HOSTS=IPAddressHere
+EMAIL_HOST=EmailHostHere
+EMAIL_HOST_USER=EmailHostUsernameHere
+EMAIL_HOST_PASSWORD=EmailPasswordHere
