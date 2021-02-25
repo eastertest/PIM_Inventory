@@ -5,7 +5,7 @@ from django.db.models import Sum
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=50, null=True, blank=True)
+    name = models.CharField(max_length=50)
     description = models.CharField(max_length=50, null=True, blank=True)
 
     def quantity(self):
@@ -22,12 +22,12 @@ class Product(models.Model):
 
 
 class Sale(models.Model):
-    date = models.DateField(blank=True, null=True)
+    date = models.DateField(default=datetime.date.today)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     customer = models.CharField(max_length=50, null=True, blank=True)
-    quantity = models.IntegerField(default=0, null=True, blank=True)
-    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
-    payment_received = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
+    quantity = models.IntegerField(default=0)
+    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    payment_received = models.DecimalField(default=0, decimal_places=2, max_digits=10)
 
     def get_total(self):
         total = self.quantity * self.unit_price
@@ -44,9 +44,9 @@ class Sale(models.Model):
 class Received(models.Model):
     date = models.DateField(default=datetime.date.today)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0, null=True, blank=True)
+    quantity = models.IntegerField(default=0)
     vendor = models.CharField(max_length=50, null=True, blank=True)
-    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
+    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10)
 
     def __str__(self):
         return self.product.name
