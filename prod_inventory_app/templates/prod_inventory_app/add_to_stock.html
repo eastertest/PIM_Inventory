@@ -6,6 +6,7 @@
 <div class="container">
   <form method="POST" action = "">
     <h1 class = "text-center">ADD TO STOCK FORM</h1><br>
+    <h1>{{product}}</h1>
     {% csrf_token %}
     {{form.as_p}}
     <input type = "submit" value="Submit">
