@@ -54,7 +54,7 @@ def add_to_stock(request, pk):
                       'postmaster@sandbox065515e5489f4b25b5eecea694b9d197.mailgun.org', ['mercado.ismael@gmail.com'])
             return redirect('home')
 
-    return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form})
+    return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product':product1.name})
 
 
 def sell_item(request, pk):
@@ -74,7 +74,7 @@ def sell_item(request, pk):
             sale.save()
             return redirect('receipt')
 
-    return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, })
+    return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product':product1.name})
 
 
 def receipt(request):
