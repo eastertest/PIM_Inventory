@@ -11,10 +11,10 @@ class Product(models.Model):
     def quantity(self):
         received = Received.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
         if received == None:
-            received = 0;
+            received = 0
         sold = Sale.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
         if sold == None:
-            sold = 0;
+            sold = 0
         return received - sold
 
     def __str__(self):

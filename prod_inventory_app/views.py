@@ -54,7 +54,7 @@ def add_to_stock(request, pk):
                       'postmaster@sandbox065515e5489f4b25b5eecea694b9d197.mailgun.org', ['mercado.ismael@gmail.com'])
             return redirect('home')
 
-    return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product':product1.name})
+    return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product': product1.name})
 
 
 def sell_item(request, pk):
@@ -74,7 +74,7 @@ def sell_item(request, pk):
             sale.save()
             return redirect('receipt')
 
-    return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product':product1.name})
+    return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product': product1.name})
 
 
 def receipt(request):
@@ -92,30 +92,27 @@ def all_sales(request):
     total = sum([sale.quantity * sale.unit_price for sale in sales])
     change = sum([sale.get_change() for sale in sales])
     net = total - change
+    sale_filters = SaleFilter(request.GET, queryset=sales)
+    sale = sale_filters.qs
     return render(request, 'prod_inventory_app/all_sales.html',
                   {
                       'sales': sales,
                       'total': total,
                       'change': change,
                       'net': net,
+                      'sale_filters': sale_filters,
+                      'sale': sale,
                   })
 
 
-def search(request):
+def stock_search(request):
     product = Product.objects.all().order_by('-id')
     received = Received.objects.all().order_by('-id')
-    sale = Sale.objects.all().order_by('-id')
-
     product_filters = ProductFilter(request.GET, queryset=product)
     received_filters = ReceivedFilter(request.GET, queryset=received)
-    sale_filters = SaleFilter(request.GET, queryset=sale)
-
     products = product_filters.qs
     received = received_filters.qs
-    sale = sale_filters.qs
-
-    return render(request, 'prod_inventory_app/search_data.html', {
+    return render(request, 'prod_inventory_app/stock_data.html', {
         'product': products, 'product_filters': product_filters,
         'received': received, 'received_filters': received_filters,
-        'sale': sale, 'sale_filters': sale_filters,
     })
