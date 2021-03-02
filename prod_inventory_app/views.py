@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from prod_inventory_app.forms import ProductForm, ReceivedForm, SaleForm
 from prod_inventory_app.filters import ProductFilter, ReceivedFilter, SaleFilter
 import datetime
+import csv
 from django.core.mail import send_mail
 
 from .models import Product, Received, Sale
@@ -116,3 +118,17 @@ def stock_search(request):
         'product': products, 'product_filters': product_filters,
         'received': received, 'received_filters': received_filters,
     })
+
+
+def export_products_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="products.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['name', 'description', 'quantity'])
+
+    products = Product.objects.all()
+    for product in products:
+        writer.writerow([product.name, product.description, product.quantity()])
+
+    return response
