@@ -1,6 +1,7 @@
 import unittest
 from django.test import Client
 
+
 class SimpleTest(unittest.TestCase):
     def setUp(self):
         # Every test needs a client.
@@ -12,4 +13,3 @@ class SimpleTest(unittest.TestCase):
 
         # Check that the response is a 302 redirect to login
         self.assertEqual(response.status_code, 302)
-
