@@ -4,7 +4,7 @@ from .models import Product, Sale, Received
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'quantity')
+    list_display = ('id', 'name', 'description', 'quantity')
 
 
 class ReceivedAdmin(admin.ModelAdmin):
