@@ -34,10 +34,9 @@
             <td>
                 <a href="{% url 'product_detail' product.id %}">
                     <input
-
-                            value="SELL / ADD"
-                            class="btn btn-secondary btn"
-                            type="button"/>
+                        value="SELL / ADD"
+                        class="btn btn-secondary btn"
+                        type="button"/>
                 </a>
             </td>
         </tr>
@@ -45,9 +44,12 @@
         {% endfor %}
     </table>
 
-    <button onclick="location.href='../export_products_csv/';">
-        Export Products to CSV
-    </button>
+    <a href="{% url 'export_products_csv' %}">
+        <input
+            value="Export Inventory to CSV"
+            class="btn btn-secondary btn"
+            type="button"/>
+    </a>
 
 </div>
 {% endblock%}
