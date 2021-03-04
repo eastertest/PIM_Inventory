@@ -131,4 +131,14 @@ def export_products_csv(request):
     for product in products:
         writer.writerow([product.name, product.description, product.quantity()])
 
+def export_sales_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="sales.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['date sold', 'customer name', 'item bought', 'quantity', 'unit price', 'payment received'])
+
+    sales = Sale.objects.all()
+    for sale in sales:
+        writer.writerow([sale.date, sale.customer, sale.product, sale.quantity, sale.unit_price, sale.payment_received])
     return response
