@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 import datetime
 from django.db.models import Sum
 
@@ -10,10 +9,19 @@ class Product(models.Model):
 
     def quantity(self):
         received = Received.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
-        if received == None:
+        if received is None:
             received = 0
         sold = Sale.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
-        if sold == None:
+        if sold is None:
+            sold = 0
+        return received - sold
+
+    def quantityovertime(self, date):
+        received = Received.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))['quantity__sum']
+        if received is None:
+            received = 0
+        sold = Sale.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))['quantity__sum']
+        if sold is None:
             sold = 0
         return received - sold
 

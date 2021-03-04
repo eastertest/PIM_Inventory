@@ -1,0 +1,94 @@
+{% extends 'prod_inventory_app/base.html'%}
+{% block content %}
+	<style>
+		canvas {
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+	</style>
+
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+
+    <h1 class= "text-center">Inventory Chart</h1>
+
+    <div class="chart-container" style="position: relative; height:85vh; width:99vw">
+        <canvas id="canvas1"></canvas>
+    </div>
+
+<script>
+    var data = {
+        labels:{{dates|safe}},
+        datasets: [{
+            label:"{{product}}",
+            backgroundColor: "green",
+            borderColor: "green",
+            fill: false,
+            data: {{quantity|safe}},
+        },]
+
+    }
+
+
+    var opt = {
+        legend: {
+            display: true,
+            position: 'right',
+        },
+        animation: {
+            duration: 0
+        },
+        tooltips: {
+            mode: 'label',
+            intersect: false,
+        },
+        elements: {
+            point: {
+                radius: 3
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        title:      {
+            display: true,
+            text: "{{title}}",
+        },
+        scales:{
+            xAxes:[{
+                type: 'time',
+                time: {
+                    parser: 'YYYY-MM-DD',
+                    unit: 'day',
+                    displayFormats: {
+                        day: 'MMM D, YYYY',
+                    }
+                },
+            }],
+            yAxes:[{
+                scaleLabel: {
+                    display:     true,
+                    labelString: "Number of Items"
+                },
+            }]
+        }
+    }
+
+    var chart = null;
+
+    window.onload = function () {
+        makeChart()
+    };
+
+
+    function makeChart () {
+        Chart.defaults.global.defaultFontSize = 20;
+        Chart.defaults.global.elements.line.borderWidth = 4;
+        if(chart == null){
+            chart = new Chart('canvas1', {type: "line", data: data, options: opt});
+        }
+        chart.update();
+    };
+
+</script>
+{% endblock%}

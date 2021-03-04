@@ -26,6 +26,28 @@ def product_detail(request, product_id):
                   {'product': product})
 
 
+def product_detail_chart(request, product_id, weeks):
+    end = datetime.date.today()
+    start = end - datetime.timedelta(weeks=weeks)
+    date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days)]
+    quantity_list = []
+    date_list = []
+    product = Product.objects.get(id=product_id)
+    for date in date_generated:
+        print(date)
+        quantity = product.quantityovertime(date)
+        quantity_list.append(quantity)
+        date_list.append(str(date))
+        print(quantity)
+
+    return render(request, 'prod_inventory_app/chart.html', {
+        'dates': date_list,
+        'quantity': quantity_list,
+        'product': product,
+        'title': str(product) + " over " + str(weeks) + " weeks",
+    })
+
+
 def add_product(request):
     form = ProductForm(request.POST)
 
@@ -130,6 +152,8 @@ def export_products_csv(request):
     products = Product.objects.all()
     for product in products:
         writer.writerow([product.name, product.description, product.quantity()])
+    return response
+
 
 def export_sales_csv(request):
     response = HttpResponse(content_type='text/csv')
