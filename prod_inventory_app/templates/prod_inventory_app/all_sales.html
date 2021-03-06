@@ -1,9 +1,58 @@
-{% extends 'prod_inventory_app/base.html'%} {% block content%}
+{% extends 'prod_inventory_app/base.html'%}
 {% load crispy_forms_tags%}
 {% load static %}
+{% block content%}
 <br/>
+
 <div class="container">
     <h1 class="text-center">SALES</h1><br>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">UPLOAD SALES</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+<div>
+    <strong>{{message|safe}}</strong>
+</div>
+{% endfor %}
+{% else %}
+
+
+
+<div class="container">
+    <a href="{% url 'sales_upload' %}">
+
+    <form action="" method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        <input type="file" id="file1" name="file">
+            <button class="btn btn-secondary btn" type="submit">Upload</button>
+    </form>
+    </a>
+    {% endif %}
+
+</div>
+
+<div class="container">
+        <a href="{% static 'prod_inventory_app/sales_template.csv' %}">
+            <input
+                    class="btn btn-link"
+                    value="Download Sales Template"
+                    type="button"/>
+        </a>
+
+    </div>
+    <br/>
+
+
+
+<div class="container">
     <table class="table">
         <thead class="thead-dark">
         <tr>
@@ -17,7 +66,7 @@
     <form method="get">
         {% csrf_token %}
         {{ sale_filters.form | crispy}}
-        <button type="submit">Search</button>
+        <button class="btn btn-secondary btn" type="submit">Search</button>
     </form>
     <span style="display:block; height: 20px;"></span>
     <table class="table">
@@ -44,12 +93,12 @@
         </tbody>
         {% endfor %}
     </table>
-	
-	    <a href="{% url 'export_sales_csv' %}">
+
+    <a href="{% url 'export_sales_csv' %}">
         <input
-            value="Export Sales to CSV"
-            class="btn btn-secondary btn"
-            type="button"/>
+                value="Export Sales to CSV"
+                class="btn btn-secondary btn"
+                type="button"/>
     </a>
 </div>
 
