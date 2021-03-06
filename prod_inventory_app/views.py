@@ -166,3 +166,16 @@ def export_sales_csv(request):
     for sale in sales:
         writer.writerow([sale.date, sale.customer, sale.product, sale.quantity, sale.unit_price, sale.payment_received])
     return response
+
+
+def export_stock_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="stock.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['order date', 'product', 'quantity received', 'vendor', 'cost'])
+
+    stock = Received.objects.all()
+    for received in stock:
+        writer.writerow([received.date, received.product, received.quantity, received.vendor, received.unit_price])
+    return response
