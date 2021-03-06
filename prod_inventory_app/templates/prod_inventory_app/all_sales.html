@@ -13,31 +13,23 @@
         </tr>
         </thead>
     </table>
-</div>
-
 {% if messages %}
-{% for message in messages %}
-<div>
-    <strong>{{message|safe}}</strong>
+    {% for message in messages %}
+        <div>
+            <strong>{{message|safe}}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+    {% csrf_token %}
+    <div class="button-wrap">
+        <label class ="new-button" for="upload"> Browse CSVs
+        <input id="upload" type="file" >
+    </div>
+    <button class="btn btn-secondary btn" type="submit">Upload</button>
+</form>
 </div>
-{% endfor %}
-{% else %}
 
 
-
-<div class="container">
-    <a href="{% url 'sales_upload' %}">
-
-    <form action="" method="POST" enctype="multipart/form-data">
-
-        {% csrf_token %}
-        <input type="file" id="file1" name="file">
-            <button class="btn btn-secondary btn" type="submit">Upload</button>
-    </form>
-    </a>
-    {% endif %}
-
-</div>
 
 <div class="container">
         <a href="{% static 'prod_inventory_app/sales_template.csv' %}">
