@@ -14,4 +14,5 @@ urlpatterns = [
     path('stock/', views.stock_search, name='stock'),
     path('export_products_csv/', views.export_products_csv, name='export_products_csv'),
     path('export_sales_csv/', views.export_sales_csv, name='export_sales_csv'),
+    path('export_stock_csv/_csv/', views.export_stock_csv, name='export_stock_csv')
 ]

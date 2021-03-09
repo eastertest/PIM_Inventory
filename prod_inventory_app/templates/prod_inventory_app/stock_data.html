@@ -44,6 +44,13 @@
     </tbody>
     {% endfor %}
   </table>
+
+    <a href="{% url 'export_stock_csv' %}">
+        <input
+            value="Export Stock to CSV"
+            class="btn btn-secondary btn"
+            type="button"/>
+    </a>
 </div>
 
 {% endblock %}
