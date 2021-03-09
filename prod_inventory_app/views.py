@@ -130,23 +130,24 @@ def all_sales(request):
                 }
     if request.method == "GET":
         return render(request, template, prompt)
-    csv_file = request.FILES['file']
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, 'NOT A CSV FILE')
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    for column in csv.reader(io_string, delimiter=',', quotechar='|'):
-        _, created = Sale.objects.update_or_create(
-            date=column[0],
-            product_id=column[1],
-            customer=column[2],
-            quantity=column[3],
-            unit_price=column[4],
-            payment_received=column[5]
-        )
-    context = {}
-    return render(request, template, context)
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'NOT A CSV FILE')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            _, created = Sale.objects.update_or_create(
+                date=column[0],
+                product_id=column[1],
+                customer=column[2],
+                quantity=column[3],
+                unit_price=column[4],
+                payment_received=column[5]
+            )
+        context = {}
+        return render(request, template, context)
 
 
 def stock_search(request):

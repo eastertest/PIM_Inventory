@@ -20,13 +20,12 @@
         </div>
     {% endfor %}
 {% endif %}
-    {% csrf_token %}
-    <div class="button-wrap">
-        <label class ="new-button" for="upload"> Browse CSVs
-        <input id="upload" type="file" >
-    </div>
-    <button class="btn btn-secondary btn" type="submit">Upload</button>
-</form>
+    <form action="{% url 'all_sales' %}" method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        <input type="file" id="file" name="file">
+            <button class="btn btn-secondary btn" type="submit">Upload</button>
+    </form>
 </div>
 
 
