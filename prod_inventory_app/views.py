@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from prod_inventory_app.forms import ProductForm, ReceivedForm, SaleForm
 from prod_inventory_app.filters import ProductFilter, ReceivedFilter, SaleFilter
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
-import csv
+import csv, io
 from django.core.mail import send_mail
+from django.contrib import messages
 
 from .models import Product, Received, Sale
 
@@ -112,21 +114,40 @@ def receipt_detail(request, receipt_id):
 
 
 def all_sales(request):
+    template = 'prod_inventory_app/all_sales.html'
     sales = Sale.objects.all()
     total = sum([sale.quantity * sale.unit_price for sale in sales])
     change = sum([sale.get_change() for sale in sales])
     net = total - change
     sale_filters = SaleFilter(request.GET, queryset=sales)
     sale = sale_filters.qs
-    return render(request, 'prod_inventory_app/all_sales.html',
-                  {
-                      'sales': sales,
-                      'total': total,
-                      'change': change,
-                      'net': net,
-                      'sale_filters': sale_filters,
-                      'sale': sale,
-                  })
+    prompt = {'sales': sales,
+                'total': total,
+                'change': change,
+                'net': net,
+                'sale_filters': sale_filters,
+                'sale': sale,
+                }
+    if request.method == "GET":
+        return render(request, template, prompt)
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'NOT A CSV FILE')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            _, created = Sale.objects.update_or_create(
+                date=column[0],
+                product_id=column[1],
+                customer=column[2],
+                quantity=column[3],
+                unit_price=column[4],
+                payment_received=column[5]
+            )
+        context = {}
+        return render(request, 'prod_inventory_app/sucess.html', context)
 
 
 def stock_search(request):
