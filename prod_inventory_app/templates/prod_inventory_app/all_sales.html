@@ -21,10 +21,9 @@
     {% endfor %}
 {% endif %}
     <form action="{% url 'all_sales' %}" method="POST" enctype="multipart/form-data">
-
         {% csrf_token %}
         <input type="file" id="file" name="file">
-            <button class="btn btn-secondary btn" type="submit">Upload</button>
+        <button class="btn btn-secondary btn" type="submit">Upload</button>
     </form>
 </div>
 

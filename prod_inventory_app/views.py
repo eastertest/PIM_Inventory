@@ -147,7 +147,7 @@ def all_sales(request):
                 payment_received=column[5]
             )
         context = {}
-        return render(request, template, context)
+        return render(request, 'prod_inventory_app/sucess.html', context)
 
 
 def stock_search(request):
