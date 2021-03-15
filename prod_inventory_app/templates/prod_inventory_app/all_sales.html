@@ -71,34 +71,34 @@
 
         <div class="pagination">
             {% if sale.has_previous %}
-            <a href="?page=1"><<</a>
-            <a href="?page={{ sale.previous_page_number }}">prev</a>
+                <a href="?page=1"><<</a>
+                <a href="?page={{ sale.previous_page_number }}">prev</a>
             {% endif %}
             {% for num in sale.paginator.page_range %}
-            {% if sale.number == num %}
-            <strong>{{ num }}</strong>
-            {% elif num > sale.number|add:'-3' and num < sale.number|add:'3' %}
-            {{ num }}
-            {% endif %}
+                {% if sale.number == num %}
+                    <strong>{{ num }}</strong>
+                {% elif num > sale.number|add:'-3' and num < sale.number|add:'3' %}
+                    {{ num }}
+                {% endif %}
             {% endfor %}
             {% if sale.has_next %}
-            <a href="?page={{ sale.next_page_number }}">next</a>
-            <a href="?page={{ sale.paginator.num_pages }}">>></a>
+                <a href="?page={{ sale.next_page_number }}">next</a>
+                <a href="?page={{ sale.paginator.num_pages }}">>></a>
             {% endif %}
         </div>
 
 
         {% for sal in sale %}
-        <tbody>
-        <tr>
-            <td>{{sal.date | title}}</td>
-            <td>{{sal.customer | title}}</td>
-            <td>{{sal.product | title}}</td>
-            <td>{{sal.quantity}}</td>
-            <td>${{sal.unit_price}}</td>
-            <td>${{sal.get_total}}</td>
-        </tr>
-        </tbody>
+            <tbody>
+            <tr>
+                <td>{{sal.date | title}}</td>
+                <td>{{sal.customer | title}}</td>
+                <td>{{sal.product | title}}</td>
+                <td>{{sal.quantity}}</td>
+                <td>${{sal.unit_price}}</td>
+                <td>${{sal.get_total}}</td>
+            </tr>
+            </tbody>
         {% endfor %}
     </table>
     <a href="{% url 'export_sales_csv' %}">
