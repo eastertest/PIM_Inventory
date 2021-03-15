@@ -7,6 +7,8 @@ import datetime
 import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
+from django.views.generic import ListView
+
 
 from .models import Product, Received, Sale
 
@@ -15,10 +17,11 @@ def home(request):
     products = Product.objects.all().order_by('-id')
     product_filters = ProductFilter(request.GET, queryset=products)
     products = product_filters.qs
-
+    paginator = Paginator(products, 5)
+    page = request.GET.get('page')
+    products = paginator.get_page(page)
     return render(request, 'prod_inventory_app/index.html', {
-        'products': products, 'product_filters': product_filters,
-    })
+        'products': products, 'product_filters': product_filters, 'page': page})
 
 
 def product_detail(request, product_id):
@@ -119,13 +122,18 @@ def all_sales(request):
     net = total - change
     sale_filters = SaleFilter(request.GET, queryset=sales)
     sale = sale_filters.qs
+    paginator = Paginator(sale, 5)
+    page = request.GET.get('page')
+    sale = paginator.get_page(page)
+
     prompt = {'sales': sales,
-                'total': total,
-                'change': change,
-                'net': net,
-                'sale_filters': sale_filters,
-                'sale': sale,
-                }
+              'total': total,
+              'change': change,
+              'net': net,
+              'sale_filters': sale_filters,
+              'sale': sale,
+              'page': page,
+              }
     if request.method == "GET":
         return render(request, template, prompt)
     if request.method == 'POST':
@@ -155,9 +163,13 @@ def stock_search(request):
     received_filters = ReceivedFilter(request.GET, queryset=received)
     products = product_filters.qs
     received = received_filters.qs
+    paginator = Paginator(received, 5)
+    page = request.GET.get('page')
+    received = paginator.get_page(page)
     return render(request, 'prod_inventory_app/stock_data.html', {
         'product': products, 'product_filters': product_filters,
         'received': received, 'received_filters': received_filters,
+        'page': page,
     })
 
 
