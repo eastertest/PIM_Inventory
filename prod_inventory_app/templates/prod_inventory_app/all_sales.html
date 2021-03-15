@@ -14,11 +14,11 @@
         </thead>
     </table>
     {% if messages %}
-    {% for message in messages %}
-    <div>
-        <strong>{{message|safe}}</strong>
-    </div>
-    {% endfor %}
+        {% for message in messages %}
+            <div>
+                <strong>{{message|safe}}</strong>
+            </div>
+        {% endfor %}
     {% endif %}
     <form action="{% url 'all_sales' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
