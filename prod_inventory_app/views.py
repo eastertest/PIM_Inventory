@@ -32,16 +32,13 @@ def product_detail_chart(request, product_id, weeks):
     end = datetime.date.today()
     start = end - datetime.timedelta(weeks=weeks)
     date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days + 1)]
-    print(date_generated)
     quantity_list = []
     date_list = []
     product = Product.objects.get(id=product_id)
     for date in date_generated:
-        print(date)
         quantity = product.quantityovertime(date)
         quantity_list.append(quantity)
         date_list.append(str(date))
-        print(quantity)
 
     return render(request, 'prod_inventory_app/chart.html', {
         'dates': date_list,
