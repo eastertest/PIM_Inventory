@@ -28,28 +28,28 @@
 
         <div class="pagination">
             {% if products.has_previous %}
-            <a href="?page=1"><<</a>
-            <a href="?page={{ products.previous_page_number }}">prev</a>
+                <a href="?page=1"><<</a>
+                <a href="?page={{ products.previous_page_number }}">prev</a>
             {% endif %}
             {% for num in products.paginator.page_range %}
-            {% if products.number == num %}
-            <strong>{{ num }}</strong>
-            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-            {{ num }}
-            {% endif %}
+                {% if products.number == num %}
+                    <strong>{{ num }}</strong>
+                {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                    {{ num }}
+                {% endif %}
             {% endfor %}
             {% if products.has_next %}
-            <a href="?page={{ products.next_page_number }}">next</a>
-            <a href="?page={{ products.paginator.num_pages }}">>></a>
+                <a href="?page={{ products.next_page_number }}">next</a>
+                <a href="?page={{ products.paginator.num_pages }}">>></a>
             {% endif %}
         </div>
 
         {% for product in products %}
-        <tbody>
-        <tr>
-            <td>{{product.name}}</td>
-            <td>{{product.description}}</td>
-            <td>{{product.quantity}}</td>
+            <tbody>
+            <tr>
+                <td>{{product.name}}</td>
+                <td>{{product.description}}</td>
+                <td>{{product.quantity}}</td>
             <td>
                 <a href="{% url 'product_detail' product.id %}">
                     <input
@@ -58,8 +58,8 @@
                         type="button"/>
                 </a>
             </td>
-        </tr>
-        </tbody>
+            </tr>
+            </tbody>
         {% endfor %}
     </table>
     <a href="{% url 'export_products_csv' %}">
