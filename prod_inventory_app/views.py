@@ -8,7 +8,7 @@ import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.views.generic import ListView
-# from prod_inventory_app.models import Product, Sale, Received
+
 
 from .models import Product, Received, Sale
 

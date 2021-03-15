@@ -13,13 +13,13 @@
         </tr>
         </thead>
     </table>
-{% if messages %}
+    {% if messages %}
     {% for message in messages %}
-        <div>
-            <strong>{{message|safe}}</strong>
-        </div>
+    <div>
+        <strong>{{message|safe}}</strong>
+    </div>
     {% endfor %}
-{% endif %}
+    {% endif %}
     <form action="{% url 'all_sales' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" id="file" name="file">
@@ -27,15 +27,17 @@
     </form>
 </div>
 
+
 <div class="container">
-        <a href="{% static 'prod_inventory_app/sales_template.csv' %}">
-            <input
-                    class="btn btn-link"
-                    value="Download Sales Template"
-                    type="button"/>
-        </a>
-    </div>
-    <br/>
+    <a href="{% static 'prod_inventory_app/sales_template.csv' %}">
+        <input
+                class="btn btn-link"
+                value="Download Sales Template"
+                type="button"/>
+    </a>
+</div>
+<br/>
+
 
 <div class="container">
     <table class="table">
@@ -46,6 +48,7 @@
         </thead>
     </table>
 </div>
+
 
 <div class="container">
     <form method="get">
@@ -82,8 +85,8 @@
             <a href="?page={{ sale.next_page_number }}">next</a>
             <a href="?page={{ sale.paginator.num_pages }}">>></a>
             {% endif %}
-
         </div>
+
 
         {% for sal in sale %}
         <tbody>

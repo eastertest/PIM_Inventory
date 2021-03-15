@@ -34,21 +34,21 @@
 
         <div class="pagination">
             {% if received.has_previous %}
-            <a href="?page=1"><<</a>
-            <a href="?page={{ received.previous_page_number }}">prev</a>
+                <a href="?page=1"><<</a>
+                <a href="?page={{ received.previous_page_number }}">prev</a>
             {% endif %}
 
             {% for num in received.paginator.page_range %}
-            {% if received.number == num %}
-            <strong>{{ num }}</strong>
-            {% elif num > received.number|add:'-3' and num < received.number|add:'3' %}
-            {{ num }}
-            {% endif %}
+                {% if received.number == num %}
+                    <strong>{{ num }}</strong>
+                {% elif num > received.number|add:'-3' and num < received.number|add:'3' %}
+                    {{ num }}
+                {% endif %}
             {% endfor %}
-            {% if received.has_next %}
-            <a href="?page={{ received.next_page_number }}">next</a>
-            <a href="?page={{ received.paginator.num_pages }}">>></a>
-            {% endif %}
+                {% if received.has_next %}
+                    <a href="?page={{ received.next_page_number }}">next</a>
+                    <a href="?page={{ received.paginator.num_pages }}">>></a>
+                {% endif %}
         </div>
 
         {% for rec in received %}
@@ -66,9 +66,9 @@
 
     <a href="{% url 'export_stock_csv' %}">
         <input
-                value="Export Stock to CSV"
-                class="btn btn-secondary btn"
-                type="button"/>
+            value="Export Stock to CSV"
+            class="btn btn-secondary btn"
+            type="button"/>
     </a>
 </div>
 
