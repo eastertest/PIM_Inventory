@@ -17,7 +17,8 @@ class Product(models.Model):
         return received - sold
 
     def quantityovertime(self, date):
-        received = Received.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))['quantity__sum']
+        received = Received.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))[
+            'quantity__sum']
         if received is None:
             received = 0
         sold = Sale.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))['quantity__sum']

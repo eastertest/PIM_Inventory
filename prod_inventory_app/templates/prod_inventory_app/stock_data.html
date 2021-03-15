@@ -15,41 +15,60 @@
     </table>
 </div>
 
+<div class="container">
+    <form method="get">
+        {{ received_filters.form | crispy}}
+        <button class="btn btn-secondary btn" type="submit">Search</button>
+    </form>
+    <span style="display:block; height: 20px;"></span>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Order Date</th>
+            <th scope="col">Product</th>
+            <th scope="col">Qty Received</th>
+            <th scope="col">Vendor</th>
+            <th scope="col">Cost</th>
+        </tr>
+        </thead>
 
-<div class = "container">
-<form method="get">
-    {{ received_filters.form  | crispy}}
-    <button class="btn btn-secondary btn" type="submit">Search</button>
-  </form>
-  <span style="display:block; height: 20px;"></span>
-  <table class="table">
-    <thead class="thead-dark">
-      <tr>
-	    <th scope="col">Order Date</th>
-		<th scope="col">Product</th>
-        <th scope="col">Qty Received</th>
-		<th scope="col">Vendor</th>
-        <th scope="col">Cost</th>
-      </tr>
-    </thead>
-    {% for received in received_filters.qs %}
-    <tbody>
-      <tr>
-		<td>{{ received.date }}</td>
-		<td>{{ received.product }}</td>
-		<td>{{ received.quantity }}</td>
-        <td>{{ received.vendor }}</td>
-		<td>{{ received.unit_price }}</td>
-      </tr>
-    </tbody>
-    {% endfor %}
-  </table>
+        <div class="pagination">
+            {% if received.has_previous %}
+            <a href="?page=1"><<</a>
+            <a href="?page={{ received.previous_page_number }}">prev</a>
+            {% endif %}
+
+            {% for num in received.paginator.page_range %}
+            {% if received.number == num %}
+            <strong>{{ num }}</strong>
+            {% elif num > received.number|add:'-3' and num < received.number|add:'3' %}
+            {{ num }}
+            {% endif %}
+            {% endfor %}
+            {% if received.has_next %}
+            <a href="?page={{ received.next_page_number }}">next</a>
+            <a href="?page={{ received.paginator.num_pages }}">>></a>
+            {% endif %}
+        </div>
+
+        {% for rec in received %}
+        <tbody>
+        <tr>
+            <td>{{ rec.date }}</td>
+            <td>{{ rec.product }}</td>
+            <td>{{ rec.quantity }}</td>
+            <td>{{ rec.vendor }}</td>
+            <td>{{ rec.unit_price }}</td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
 
     <a href="{% url 'export_stock_csv' %}">
         <input
-            value="Export Stock to CSV"
-            class="btn btn-secondary btn"
-            type="button"/>
+                value="Export Stock to CSV"
+                class="btn btn-secondary btn"
+                type="button"/>
     </a>
 </div>
 
