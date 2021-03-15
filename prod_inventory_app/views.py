@@ -31,7 +31,8 @@ def product_detail(request, product_id):
 def product_detail_chart(request, product_id, weeks):
     end = datetime.date.today()
     start = end - datetime.timedelta(weeks=weeks)
-    date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days)]
+    date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days + 1)]
+    print(date_generated)
     quantity_list = []
     date_list = []
     product = Product.objects.get(id=product_id)
