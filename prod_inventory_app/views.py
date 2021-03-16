@@ -7,9 +7,6 @@ import datetime
 import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
-from django.views.generic import ListView
-
-
 from .models import Product, Received, Sale
 
 
@@ -168,11 +165,6 @@ def all_sales(request):
             )
         context = {}
         return render(request, 'prod_inventory_app/sucess.html', context)
-				
-		
-def all_products(request):
-    pass
-
 
 
 def stock_search(request):
