@@ -60,6 +60,20 @@ def add_product(request):
             new_product.save()
             return redirect('home')
 
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'NOT A CSV FILE')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            _, created = Product.objects.update_or_create(
+                name=column[0],
+                description=column[1],
+            )
+        context = {}
+        return render(request, 'prod_inventory_app/sucess.html', context)
+
     return render(request, 'prod_inventory_app/add_product.html', {'form': form})
 
 
@@ -154,6 +168,11 @@ def all_sales(request):
             )
         context = {}
         return render(request, 'prod_inventory_app/sucess.html', context)
+				
+		
+def all_products(request):
+    pass
+
 
 
 def stock_search(request):
