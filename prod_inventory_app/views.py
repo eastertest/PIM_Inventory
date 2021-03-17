@@ -90,23 +90,7 @@ def add_to_stock(request, pk):
             send_mail('PIM INVENTORY Added Stock', 'HELLO, NEW INVENTORY has been added.',
                       'postmaster@sandbox065515e5489f4b25b5eecea694b9d197.mailgun.org', ['mercado.ismael@gmail.com'])
             return redirect('home')
-        csv_file = request.FILES['file']
-        if not csv_file.name.endswith('.csv'):
-            messages.error(request, 'NOT A CSV FILE')
-        data_set = csv_file.read().decode('UTF-8')
-        io_string = io.StringIO(data_set)
-        next(io_string)
-        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
-            _, created = Sale.objects.update_or_create(
-                date=column[0],
-                product_id=column[1],
-                quantity=column[2],
-                vendor=column[3],
-                unit_price=column[4],
-            )
-        context = {}
-        return render(request, 'prod_inventory_app/sucess.html', context)
-
+        
     return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product': product1.name})
 
 
