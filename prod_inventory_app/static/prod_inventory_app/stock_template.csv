@@ -1,1 +1,1 @@
-order date,product,quantity received,vendor,cost
+date,product_id,quantity,vendor,unit_price

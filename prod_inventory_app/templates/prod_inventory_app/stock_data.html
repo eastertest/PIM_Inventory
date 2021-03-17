@@ -6,6 +6,37 @@
 <br/>
 <div class="container">
     <h1 class="text-center">STOCK</h1><br>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">UPLOAD</th>
+        </tr>
+        </thead>
+    </table>
+    {% if messages %}
+    {% for message in messages %}
+    <div>
+        <strong>{{message|safe}}</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <form action="{% url 'add_to_stock' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" id="file" name="file">
+        <button class="btn btn-secondary btn" type="submit">Upload</button>
+    </form>
+
+    <div class="container">
+        <a href="{% static 'prod_inventory_app/stock_template.csv' %}">
+            <input
+                    class="btn btn-link"
+                    value="Download Restock Template"
+                    type="button"/>
+        </a>
+    </div>
+    <br/>
+
     <table class="table">
         <thead class="thead-dark">
         <tr>
