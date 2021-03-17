@@ -90,7 +90,7 @@ def add_to_stock(request, pk):
             send_mail('PIM INVENTORY Added Stock', 'HELLO, NEW INVENTORY has been added.',
                       'postmaster@sandbox065515e5489f4b25b5eecea694b9d197.mailgun.org', ['mercado.ismael@gmail.com'])
             return redirect('home')
-        
+
     return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product': product1.name})
 
 
