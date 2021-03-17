@@ -50,7 +50,6 @@ def product_detail_chart(request, product_id, weeks):
 
 def add_product(request):
     form = ProductForm(request.POST)
-
     if request.method == 'POST':
         if form.is_valid():
             new_product = form.save(commit=False)
@@ -127,7 +126,7 @@ def receipt_detail(request, receipt_id):
 
 def all_sales(request):
     template = 'prod_inventory_app/all_sales.html'
-    sales = Sale.objects.all()
+    sales = Sale.objects.all().order_by('-date')
     total = sum([sale.quantity * sale.unit_price for sale in sales])
     change = sum([sale.get_change() for sale in sales])
     net = total - change
@@ -221,3 +220,23 @@ def export_stock_csv(request):
     for received in stock:
         writer.writerow([received.date, received.product, received.quantity, received.vendor, received.unit_price])
     return response
+
+
+def add_to_stock_csv(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'NOT A CSV FILE')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            _, created = Received.objects.update_or_create(
+                date=column[0],
+                product_id=column[1],
+                quantity=column[2],
+                vendor=column[3],
+                unit_price=column[4],
+            )
+        context = {}
+        return render(request, 'prod_inventory_app/sucess.html', context)
