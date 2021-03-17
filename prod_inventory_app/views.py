@@ -7,9 +7,6 @@ import datetime
 import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
-from django.views.generic import ListView
-
-
 from .models import Product, Received, Sale
 
 
@@ -59,6 +56,20 @@ def add_product(request):
             new_product = form.save(commit=False)
             new_product.save()
             return redirect('home')
+
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'NOT A CSV FILE')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            _, created = Product.objects.update_or_create(
+                name=column[0],
+                description=column[1],
+            )
+        context = {}
+        return render(request, 'prod_inventory_app/sucess.html', context)
 
     return render(request, 'prod_inventory_app/add_product.html', {'form': form})
 

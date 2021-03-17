@@ -1,8 +1,52 @@
-{% extends 'prod_inventory_app/base.html'%} {% block content%}
+{% extends 'prod_inventory_app/base.html'%}
+{% load static %}
+{% block content%}
 
 <br/>
 <div class="container">
     <h1 class="text-center">ITEMS IN STOCK</h1>
+    <br/>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">UPLOAD</th>
+        </tr>
+        </thead>
+    </table>
+    {% if messages %}
+    {% for message in messages %}
+    <div>
+        <strong>{{message|safe}}</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" id="file" name="file">
+        <button class="btn btn-secondary btn" type="submit">Upload</button>
+    </form>
+
+    <div class="container">
+        <a href="{% static 'prod_inventory_app/products_template.csv' %}">
+            <input
+                    class="btn btn-link"
+                    value="Download Products Template"
+                    type="button"/>
+        </a>
+    </div>
+    <br/>
+
+    <br/>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">SEARCH</th>
+        </tr>
+        </thead>
+    </table>
+
     <br>
     <div class="container">
         <form action="" method="GET">
@@ -23,6 +67,7 @@
             <th scope="col">Item Name</th>
             <th scope="col">Description</th>
             <th scope="col">Quantity</th>
+            <th scope="col"></th>
         </tr>
         </thead>
 
