@@ -15,6 +15,9 @@ class SaleAdmin(admin.ModelAdmin):
     list_display = ('product', 'date', 'customer', 'quantity', 'unit_price')
 
 
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(Received, ReceivedAdmin)
+

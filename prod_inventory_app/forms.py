@@ -29,3 +29,12 @@ class SaleForm(ModelForm):
         widgets = {
             'date': DateInput(),
         }
+
+class RemoveForm(ModelForm):
+    class Meta:
+        model = Sale
+        fields = ['date', 'quantity']
+        widgets = {
+            'date': DateInput(),
+        }
+
