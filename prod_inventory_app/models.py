@@ -14,7 +14,10 @@ class Product(models.Model):
         sold = Sale.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
         if sold is None:
             sold = 0
-        return received - sold
+        removed = Removed.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
+        if removed is None:
+            removed = 0
+        return received - sold - removed
 
     def quantityovertime(self, date):
         received = Received.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))['quantity__sum']
@@ -23,7 +26,10 @@ class Product(models.Model):
         sold = Sale.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))['quantity__sum']
         if sold is None:
             sold = 0
-        return received - sold
+        removed = Removed.objects.filter(product=self).filter(date__lte=date).aggregate(Sum('quantity'))['quantity__sum']
+        if removed is None:
+            removed = 0
+        return received - sold - removed
 
     def __str__(self):
         return self.name
@@ -54,12 +60,21 @@ class Received(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     vendor = models.CharField(max_length=50, null=True, blank=True)
-    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10) 
 
     def __str__(self):
         return self.product.name
 
-        
+class Removed(models.Model):
+    date = models.DateField(default=datetime.date.today)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+    reason = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return self.product.name
+
+   
 
 
 

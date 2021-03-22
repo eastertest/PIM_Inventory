@@ -6,7 +6,7 @@
 
 <div class="container">
   <form method="POST" action = "">
-    <h1 class = "text-center">Remove/Issue Item Form</h1><br>
+    <h1 class = "text-center">Remove Item Form</h1><br>
     <h1>{{product}}</h1>
     {% csrf_token %}
     {{remove_form | crispy}}
