@@ -18,4 +18,4 @@ urlpatterns = [
     path('add_to_stock_csv/', views.add_to_stock_csv, name='add_to_stock'),
     path('reports/', views.reports, name='reports'),
     path('remove_item/<str:pk>/', views.remove_item, name='remove_item'),
-    ]
+]
