@@ -16,9 +16,6 @@ urlpatterns = [
     path('export_sales_csv/', views.export_sales_csv, name='export_sales_csv'),
     path('export_stock_csv/_csv/', views.export_stock_csv, name='export_stock_csv'),
     path('add_to_stock_csv/', views.add_to_stock_csv, name='add_to_stock'),
-<<<<<<< HEAD
     path('reports/', views.reports, name='reports'),
-=======
     path('remove_item/<str:pk>/', views.remove_item, name='remove_item'),
->>>>>>> main
-]
+    ]

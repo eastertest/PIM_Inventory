@@ -242,12 +242,6 @@ def add_to_stock_csv(request):
         return render(request, 'prod_inventory_app/sucess.html', context)
 
 
-<<<<<<< HEAD
-def reports(request):
-    return render(request, 'prod_inventory_app/reports.html')
-
-
-=======
 def remove_item(request, pk):
     today = datetime.date.today()
     product1 = Product.objects.get(id=pk)
@@ -265,4 +259,7 @@ def remove_item(request, pk):
             return redirect('home')
 
     return render(request, 'prod_inventory_app/remove.html', {'remove_form': form, 'product': product1.name})
->>>>>>> main
+
+
+def reports(request):
+    return render(request, 'prod_inventory_app/reports.html')
