@@ -240,3 +240,9 @@ def add_to_stock_csv(request):
             )
         context = {}
         return render(request, 'prod_inventory_app/sucess.html', context)
+
+
+def reports(request):
+    return render(request, 'prod_inventory_app/reports.html')
+
+
