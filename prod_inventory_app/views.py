@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
-from prod_inventory_app.forms import ProductForm, ReceivedForm, SaleForm
+from prod_inventory_app.forms import ProductForm, ReceivedForm, SaleForm, RemovedForm
 from prod_inventory_app.filters import ProductFilter, ReceivedFilter, SaleFilter
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
 import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
-from .models import Product, Received, Sale
+from .models import Product, Received, Sale, Removed
 
 
 def home(request):
@@ -242,7 +242,27 @@ def add_to_stock_csv(request):
         return render(request, 'prod_inventory_app/sucess.html', context)
 
 
+<<<<<<< HEAD
 def reports(request):
     return render(request, 'prod_inventory_app/reports.html')
 
 
+=======
+def remove_item(request, pk):
+    today = datetime.date.today()
+    product1 = Product.objects.get(id=pk)
+    remove = Removed(product=product1, date=today)
+    form = RemovedForm(instance=remove)
+
+    if request.method == 'POST':
+        form = RemovedForm(request.POST)
+        if form.is_valid():
+            remove.date = form.cleaned_data['date']
+            remove.quantity = form.cleaned_data['quantity']
+            remove.reason = form.cleaned_data['reason']
+
+            remove.save()
+            return redirect('home')
+
+    return render(request, 'prod_inventory_app/remove.html', {'remove_form': form, 'product': product1.name})
+>>>>>>> main

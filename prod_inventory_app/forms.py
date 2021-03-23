@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Product, Received, Sale
+from .models import Product, Received, Sale, Removed
 
 
 class DateInput(forms.DateInput):
@@ -29,3 +29,12 @@ class SaleForm(ModelForm):
         widgets = {
             'date': DateInput(),
         }
+
+class RemovedForm(ModelForm):
+    class Meta:
+        model = Removed
+        fields = ['date', 'quantity', 'reason']
+        widgets = {
+            'date': DateInput(),
+        }
+
