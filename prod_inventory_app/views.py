@@ -259,3 +259,7 @@ def remove_item(request, pk):
             return redirect('home')
 
     return render(request, 'prod_inventory_app/remove.html', {'remove_form': form, 'product': product1.name})
+
+
+def reports(request):
+    return render(request, 'prod_inventory_app/reports.html')

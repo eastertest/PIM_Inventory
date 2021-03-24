@@ -1,0 +1,45 @@
+{% extends 'prod_inventory_app/base.html'%}
+{% load crispy_forms_tags%}
+{% load static %}
+{% block content%}
+<br/>
+
+
+<div class="container">
+    <h1 class="text-center">REPORTS</h1><br>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Generate Global Reports</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="container">
+	<a href="{% url 'export_products_csv' %}">
+        <input
+            value="Products"
+            class="btn btn-secondary btn"
+            type="button"/>
+    </a>
+
+	<br/>
+	<br/>
+    <a href="{% url 'export_sales_csv' %}">
+        <input
+                value="   Sales   "
+                class="btn btn-secondary btn"
+                type="button"/>
+    </a>
+	<br/>
+	<br/>
+	<a href="{% url 'export_stock_csv' %}">
+        <input
+            value="  Stocks  "
+            class="btn btn-secondary btn"
+            type="button"/>
+    </a>
+</div>
+
+    {% endblock %}
