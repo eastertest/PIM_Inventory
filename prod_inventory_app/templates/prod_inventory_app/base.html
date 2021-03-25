@@ -28,7 +28,23 @@
             <a class="nav-item nav-link" href="{% url 'add_product' %}">Add Items</a>
             <a class="nav-item nav-link" href="{% url 'stock' %}">All Stock</a>
             <a class="nav-item nav-link" href="{% url 'reports' %}">Reports</a>
+            {% if user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                Welcome, {{request.user.first_name}} <b class="caret"></b>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right position-absolute" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+            {% else %}
+                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+            {% endif %}
         </div>
+
     </div>
 </nav>
 
