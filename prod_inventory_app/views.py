@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
-from prod_inventory_app.forms import ProductForm, ReceivedForm, SaleForm, RemovedForm
+from prod_inventory_app.forms import SignUpForm, ProductForm, ReceivedForm, SaleForm, RemovedForm
 from prod_inventory_app.filters import ProductFilter, ReceivedFilter, SaleFilter
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
 import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
+from django.contrib.auth import login, authenticate
 from .models import Product, Received, Sale, Removed
 
 
@@ -263,3 +264,18 @@ def remove_item(request, pk):
 
 def reports(request):
     return render(request, 'prod_inventory_app/reports.html')
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'prod_inventory_app/signup.html', {'form': form})
