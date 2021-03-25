@@ -42,12 +42,31 @@
 <div class="container">
     <table class="table">
         <thead class="thead-dark">
+        {% for result in data%}
         <tr>
             <th scope="col">SEARCH SALES</th>
+            <td>{{result.date}}</td>
+            <td>{{result.customer}}</td>
+            <td>{{result.product}}</td>
+            <td>{{result.quantity}}</td>
+            <td>{{result.unitprice}}</td>
         </tr>
+        {% endfor %}
         </thead>
     </table>
-</div>
+
+
+
+
+<form method="GET"> {% csrf_token %}
+    FROM: <input type="date" name="f_date"> <br>  <br>
+    TO:   <input type="date" name="t_date"> <br>  <br>  <hr>
+          <input type="submit"> <br> <br>
+</form>
+
+
+
+
 
 
 <div class="container">

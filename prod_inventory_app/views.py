@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from prod_inventory_app.models import Sale
 from django.http import HttpResponse, HttpRequest
 from prod_inventory_app.forms import ProductForm, ReceivedForm, SaleForm
 from prod_inventory_app.filters import ProductFilter, ReceivedFilter, SaleFilter
@@ -8,6 +9,7 @@ import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.views.generic import ListView
+from bootstrap_datepicker_plus import DateTimePickerInput
 
 
 from .models import Product, Received, Sale
@@ -114,14 +116,21 @@ def receipt_detail(request, receipt_id):
     return render(request, 'prod_inventory_app/receipt_detail.html', {'receipt': receipt})
 
 
+
+
+
 def all_sales(request):
     template = 'prod_inventory_app/all_sales.html'
+##    f_date = datetime.date(year=2021, month=1, day=1)
+##    t_date = datetime.date(year=2021, month=3, day=25)
+##    sales = Sale.objects.filter(date__range=(f_date, t_date))
     sales = Sale.objects.all()
     total = sum([sale.quantity * sale.unit_price for sale in sales])
     change = sum([sale.get_change() for sale in sales])
     net = total - change
     sale_filters = SaleFilter(request.GET, queryset=sales)
     sale = sale_filters.qs
+    print(sale)
     paginator = Paginator(sale, 20)
     page = request.GET.get('page')
     sale = paginator.get_page(page)

@@ -5,3 +5,4 @@ python-dotenv==0.15.0
 django-filter==2.3.0
 django-crispy-forms==1.9.2
 flake8==3.8.4
+django-bootstrap-datepicker-plus==3.0.5

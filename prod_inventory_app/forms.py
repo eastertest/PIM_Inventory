@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from .models import Product, Received, Sale
+from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput
 
 
 class DateInput(forms.DateInput):
@@ -29,3 +30,11 @@ class SaleForm(ModelForm):
         widgets = {
             'date': DateInput(),
         }
+
+
+class SearchSalesForm(forms.ModelForm):
+	start_date = forms.DateTimeField(required=False)
+	end_date = forms.DateTimeField(required=False)
+	class Meta:
+		model = Sale
+		fields = ['date', 'quantity', 'payment_received', 'customer', 'unit_price']

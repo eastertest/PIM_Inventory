@@ -27,12 +27,5 @@ class ReceivedFilter(django_filters.FilterSet):
 class SaleFilter(django_filters.FilterSet):
     class Meta:
         model = Sale
-        fields = ['product', 'customer', 'date']
-        filter_overrides = {
-            models.DateField: {
-                'filter_class': django_filters.DateFilter,
-                'extra': lambda f: {
-                    'widget': forms.DateInput(attrs={'type': 'date'}),
-                },
-            },
-        }
+        fields = ['product', 'customer']
+
