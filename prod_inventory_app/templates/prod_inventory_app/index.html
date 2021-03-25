@@ -3,6 +3,13 @@
 {% block content%}
 
 <br/>
+{% if messages %}
+{% for message in messages %}
+<div>
+    <strong>{{message|safe}}</strong>
+</div>
+{% endfor %}
+{% endif %}
 <div class="container">
     <h1 class="text-center">ITEMS IN STOCK</h1>
     <br/>
@@ -14,13 +21,7 @@
         </tr>
         </thead>
     </table>
-    {% if messages %}
-    {% for message in messages %}
-    <div>
-        <strong>{{message|safe}}</strong>
-    </div>
-    {% endfor %}
-    {% endif %}
+   
     <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" id="file" name="file">

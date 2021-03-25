@@ -110,6 +110,10 @@ def sell_item(request, pk):
             sale.unit_price = form.cleaned_data['unit_price']
             sale.payment_received = form.cleaned_data['payment_received']
             sale.save()
+            if product1.quantity() < 10:
+                messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
+                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.',
+                'postmaster@sandbox065515e5489f4b25b5eecea694b9d197.mailgun.org', ['madisonprice359@gmail.com'])
             return redirect('receipt')
 
     return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product': product1.name})
@@ -255,8 +259,11 @@ def remove_item(request, pk):
             remove.date = form.cleaned_data['date']
             remove.quantity = form.cleaned_data['quantity']
             remove.reason = form.cleaned_data['reason']
-
             remove.save()
+            if product1.quantity() < 10:
+                messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
+                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.',
+                'postmaster@sandbox065515e5489f4b25b5eecea694b9d197.mailgun.org', ['madisonprice359@gmail.com'])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/remove.html', {'remove_form': form, 'product': product1.name})
