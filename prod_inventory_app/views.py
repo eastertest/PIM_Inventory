@@ -91,7 +91,7 @@ def add_to_stock(request, pk):
             received.unit_price = form.cleaned_data['unit_price']
             received.save()
             send_mail('PIM INVENTORY Added Stock', 'HELLO, NEW INVENTORY has been added.',
-                      os.getenv("EMAIL_HOST"), ['mercado.ismael@gmail.com'])
+                      os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product': product1.name})
