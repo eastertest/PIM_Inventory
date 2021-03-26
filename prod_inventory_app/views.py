@@ -90,8 +90,8 @@ def add_to_stock(request, pk):
             received.vendor = form.cleaned_data['vendor']
             received.unit_price = form.cleaned_data['unit_price']
             received.save()
-            send_mail('PIM INVENTORY Added Stock', 'HELLO, NEW INVENTORY has been added.',
-                      os.getenv("EMAIL_HOST"), ['mercado.ismael@gmail.com'])
+            send_mail('PIM INVENTORY Added Stock', 'HELLO, ' +  product1.name + ' has been added.',
+                      os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product': product1.name})
@@ -116,7 +116,7 @@ def sell_item(request, pk):
             sale.save()
             if product1.quantity() < 10:
                 messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
-                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
+                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add Inventory' + ' for ' + product1.name, os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('receipt')
 
     return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product': product1.name})
@@ -267,7 +267,7 @@ def remove_item(request, pk):
             remove.save()
             if product1.quantity() < 10:
                 messages.success(request, 'HELLO, Please Add New Stock to Inventory.') 
-                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
+                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add Inventory' + ' for ' + product1.name, os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/remove.html', {'remove_form': form, 'product': product1.name})
