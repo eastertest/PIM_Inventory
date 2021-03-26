@@ -9,7 +9,8 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from .models import Product, Received, Sale, Removed
-
+import os
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     products = Product.objects.all().order_by('-id')
@@ -48,7 +49,7 @@ def product_detail_chart(request, product_id, weeks):
         'title': str(product) + " over " + str(weeks) + " weeks",
     })
 
-
+@login_required
 def add_product(request):
     form = ProductForm(request.POST)
     if request.method == 'POST':
@@ -74,6 +75,7 @@ def add_product(request):
     return render(request, 'prod_inventory_app/add_product.html', {'form': form})
 
 
+@login_required
 def add_to_stock(request, pk):
     today = datetime.date.today()
     product1 = Product.objects.get(id=pk)
@@ -89,12 +91,14 @@ def add_to_stock(request, pk):
             received.unit_price = form.cleaned_data['unit_price']
             received.save()
             send_mail('PIM INVENTORY Added Stock', 'HELLO, NEW INVENTORY has been added.',
-                      'postmaster@sandbox065515e5489f4b25b5eecea694b9d197.mailgun.org', ['mercado.ismael@gmail.com'])
+                      os.getenv("EMAIL_HOST"), ['mercado.ismael@gmail.com'])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product': product1.name})
 
 
+
+@login_required
 def sell_item(request, pk):
     today = datetime.date.today()
     product1 = Product.objects.get(id=pk)
@@ -110,6 +114,9 @@ def sell_item(request, pk):
             sale.unit_price = form.cleaned_data['unit_price']
             sale.payment_received = form.cleaned_data['payment_received']
             sale.save()
+            if product1.quantity() < 10:
+                messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
+                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('receipt')
 
     return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product': product1.name})
@@ -223,6 +230,7 @@ def export_stock_csv(request):
     return response
 
 
+@login_required
 def add_to_stock_csv(request):
     if request.method == 'POST':
         csv_file = request.FILES['file']
@@ -243,6 +251,7 @@ def add_to_stock_csv(request):
         return render(request, 'prod_inventory_app/sucess.html', context)
 
 
+@login_required
 def remove_item(request, pk):
     today = datetime.date.today()
     product1 = Product.objects.get(id=pk)
@@ -255,8 +264,10 @@ def remove_item(request, pk):
             remove.date = form.cleaned_data['date']
             remove.quantity = form.cleaned_data['quantity']
             remove.reason = form.cleaned_data['reason']
-
             remove.save()
+            if product1.quantity() < 10:
+                messages.success(request, 'HELLO, Please Add New Stock to Inventory.') 
+                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/remove.html', {'remove_form': form, 'product': product1.name})
