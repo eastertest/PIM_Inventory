@@ -7,6 +7,10 @@ class Product(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=50, null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(Product, self).save(*args, **kwargs)
+
     def quantity(self):
         received = Received.objects.filter(product=self).aggregate(Sum('quantity'))['quantity__sum']
         if received is None:
