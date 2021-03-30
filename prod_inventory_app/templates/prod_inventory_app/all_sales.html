@@ -2,7 +2,7 @@
 {% load crispy_forms_tags%}
 {% load static %}
 {% block content%}
-<br/>
+<br>
 
 <div class="container">
     <h1 class="text-center">SALES</h1><br>
@@ -91,7 +91,7 @@
         {% for sal in sale %}
             <tbody>
             <tr>
-                <td>{{sal.date | title}}</td>
+                <td>{{sal.date }}</td>
                 <td>{{sal.customer | title}}</td>
                 <td>{{sal.product | title}}</td>
                 <td>{{sal.quantity}}</td>

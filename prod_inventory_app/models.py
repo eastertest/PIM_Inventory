@@ -40,7 +40,7 @@ class Product(models.Model):
 
 
 class Sale(models.Model):
-    date = models.DateField(default=datetime.date.today)
+    date = models.DateTimeField(default=datetime.datetime.now)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     customer = models.CharField(max_length=50, null=True, blank=True)
     quantity = models.IntegerField(default=0)
@@ -60,7 +60,7 @@ class Sale(models.Model):
 
 
 class Received(models.Model):
-    date = models.DateField(default=datetime.date.today)
+    date = models.DateTimeField(default=datetime.datetime.now)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     vendor = models.CharField(max_length=50, null=True, blank=True)
@@ -70,15 +70,10 @@ class Received(models.Model):
         return self.product.name
 
 class Removed(models.Model):
-    date = models.DateField(default=datetime.date.today)
+    date = models.DateTimeField(default=datetime.datetime.now)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     reason = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.product.name
-
-   
-
-
-

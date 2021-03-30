@@ -4,19 +4,26 @@ from .models import Product, Sale, Received, Removed
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'quantity')
+    list_display = ['id', 'name', 'description', 'quantity']
+    ordering = ['-id']
+    list_filter = ['name']
 
 
 class ReceivedAdmin(admin.ModelAdmin):
-    list_display = ('product', 'date', 'quantity', 'vendor', 'unit_price')
+    list_display = ['product', 'date', 'quantity', 'vendor', 'unit_price']
+    ordering = ['-date']
+    list_filter = ['date', 'product']
 
 
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ('product', 'date', 'customer', 'quantity', 'unit_price')
+    list_display = ['product', 'date', 'customer', 'quantity', 'unit_price']
+    ordering = ['-date']
+    list_filter = ['date', 'product']
 
 class RemovedAdmin(admin.ModelAdmin):
-    list_display = ('product', 'date', 'quantity', 'reason')
-
+    list_display = ['product', 'date', 'quantity', 'reason']
+    ordering = ['-date']
+    list_filter = ['date', 'product']
 
 
 
