@@ -28,25 +28,16 @@ class ProductForm(ModelForm):
 class ReceivedForm(ModelForm):
     class Meta:
         model = Received
-        fields = ['date', 'quantity', 'vendor', 'unit_price']
-        widgets = {
-            'date': DateInput(),
-        }
+        fields = ['quantity', 'vendor', 'unit_price']
 
 
 class SaleForm(ModelForm):
     class Meta:
         model = Sale
-        fields = ['date', 'quantity', 'payment_received', 'customer', 'unit_price']
-        widgets = {
-            'date': DateInput(),
-        }
+        fields = ['quantity', 'payment_received', 'customer', 'unit_price']
+
 
 class RemovedForm(ModelForm):
     class Meta:
         model = Removed
-        fields = ['date', 'quantity', 'reason']
-        widgets = {
-            'date': DateInput(),
-        }
-
+        fields = ['quantity', 'reason']

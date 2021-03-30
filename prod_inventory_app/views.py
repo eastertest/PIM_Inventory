@@ -77,7 +77,7 @@ def add_product(request):
 
 @login_required
 def add_to_stock(request, pk):
-    today = datetime.date.today()
+    today = datetime.datetime.now()
     product1 = Product.objects.get(id=pk)
     received = Received(product=product1, date=today)
     form = ReceivedForm(instance=received)
@@ -85,7 +85,7 @@ def add_to_stock(request, pk):
     if request.method == 'POST':
         form = ReceivedForm(request.POST)
         if form.is_valid():
-            received.date = form.cleaned_data['date']
+            received.date = datetime.datetime.now()
             received.quantity = form.cleaned_data['quantity']
             received.vendor = form.cleaned_data['vendor']
             received.unit_price = form.cleaned_data['unit_price']
@@ -100,7 +100,7 @@ def add_to_stock(request, pk):
 
 @login_required
 def sell_item(request, pk):
-    today = datetime.date.today()
+    today = datetime.datetime.now()
     product1 = Product.objects.get(id=pk)
     sale = Sale(product=product1, date=today)
     form = SaleForm(instance=sale)
@@ -108,7 +108,7 @@ def sell_item(request, pk):
     if request.method == 'POST':
         form = SaleForm(request.POST)
         if form.is_valid():
-            sale.date = form.cleaned_data['date']
+            sale.date = datetime.datetime.now()
             sale.customer = form.cleaned_data['customer']
             sale.quantity = form.cleaned_data['quantity']
             sale.unit_price = form.cleaned_data['unit_price']
@@ -253,7 +253,7 @@ def add_to_stock_csv(request):
 
 @login_required
 def remove_item(request, pk):
-    today = datetime.date.today()
+    today = datetime.datetime.now()
     product1 = Product.objects.get(id=pk)
     remove = Removed(product=product1, date=today)
     form = RemovedForm(instance=remove)
@@ -261,7 +261,7 @@ def remove_item(request, pk):
     if request.method == 'POST':
         form = RemovedForm(request.POST)
         if form.is_valid():
-            remove.date = form.cleaned_data['date']
+            remove.date = datetime.datetime.now()
             remove.quantity = form.cleaned_data['quantity']
             remove.reason = form.cleaned_data['reason']
             remove.save()
