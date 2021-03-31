@@ -113,11 +113,14 @@ def sell_item(request, pk):
             sale.quantity = form.cleaned_data['quantity']
             sale.unit_price = form.cleaned_data['unit_price']
             sale.payment_received = form.cleaned_data['payment_received']
-            sale.save()
-            if product1.quantity() < 10:
-                messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
-                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add Inventory' + ' for ' + product1.name, os.getenv("EMAIL_HOST_USER"), [request.user.email])
-            return redirect('receipt')
+            if sale.get_change() > 0:
+                form.clean()
+            else:
+                sale.save()
+                if product1.quantity() < 10:
+                    messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
+                    send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, ' + request.user.first_name + '. Please Add Inventory for ' + product1.name + '.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
+                return redirect('receipt')
 
     return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product': product1.name})
 
