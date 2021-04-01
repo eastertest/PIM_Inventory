@@ -1,6 +1,9 @@
 from django.db import models
 import datetime
 from django.db.models import Sum
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Product(models.Model):
@@ -64,7 +67,7 @@ class Received(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     vendor = models.CharField(max_length=50, null=True, blank=True)
-    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10) 
+    unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10)
 
     def __str__(self):
         return self.product.name
@@ -77,3 +80,15 @@ class Removed(models.Model):
 
     def __str__(self):
         return self.product.name
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email_confirmed = models.BooleanField(default=False)
+
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
