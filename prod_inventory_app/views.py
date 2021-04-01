@@ -115,6 +115,7 @@ def sell_item(request, pk):
             sale.payment_received = form.cleaned_data['payment_received']
             if sale.get_change() > 0:
                 form.clean()
+                messages.warning(request, 'Not enough Funds to complete the transaction.')
             else:
                 sale.save()
                 if product1.quantity() < 10:
