@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Product, Sale, Received, Removed
+from .models import Product, Sale, Received, Removed, RemovedReason
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -20,10 +20,17 @@ class SaleAdmin(admin.ModelAdmin):
     ordering = ['-date']
     list_filter = ['date', 'product']
 
+
 class RemovedAdmin(admin.ModelAdmin):
-    list_display = ['product', 'date', 'quantity', 'reason']
+    list_display = ['product', 'date', 'quantity', 'reason1']
     ordering = ['-date']
-    list_filter = ['date', 'product']
+    list_filter = ['date', 'product', 'reason1']
+
+
+class RemovedReasonAdmin(admin.ModelAdmin):
+    list_display = ['reason']
+    ordering = ['reason']
+    list_filter = ['reason']
 
 
 
@@ -31,4 +38,5 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(Received, ReceivedAdmin)
 admin.site.register(Removed, RemovedAdmin)
+admin.site.register(RemovedReason, RemovedReasonAdmin)
 
