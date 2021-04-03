@@ -115,8 +115,8 @@ def sell_item(request, pk):
             sale.payment_received = form.cleaned_data['payment_received']
             sale.save()
             if product1.quantity() < 10:
-                messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
-                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
+                messages.success(request, 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.')
+                send_mail('PIM INVENTORY Low Stock Alert', 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('receipt')
 
     return render(request, 'prod_inventory_app/issue_item.html', {'sales_form': form, 'product': product1.name})
@@ -266,8 +266,8 @@ def remove_item(request, pk):
             remove.reason = form.cleaned_data['reason']
             remove.save()
             if product1.quantity() < 10:
-                messages.success(request, 'HELLO, Please Add New Stock to Inventory.') 
-                send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add New Inventory.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
+                messages.success(request, 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.')
+                send_mail('PIM INVENTORY Low Stock Alert', 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/remove.html', {'remove_form': form, 'product': product1.name})
