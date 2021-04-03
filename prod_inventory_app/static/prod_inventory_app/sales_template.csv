@@ -1,1 +1,1 @@
-date (yyyy-mm-dd),product_id,customer,quantity,unit_price,payment_received
+date (yyyy-mm-dd),product (string),customer (string),quantity (integer),unit_price (float),payment_received (float)

@@ -176,7 +176,7 @@ def all_sales(request):
         for column in csv.reader(io_string, delimiter=',', quotechar='|'):
             _, created = Sale.objects.update_or_create(
                 date=column[0],
-                product_id=column[1],
+                product_id=Product.objects.update_or_create(name=column[1].lower())[0].id,
                 customer=column[2],
                 quantity=column[3],
                 unit_price=column[4],
