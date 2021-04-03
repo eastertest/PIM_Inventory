@@ -73,7 +73,11 @@ class Received(models.Model):
         return self.product.name
 
 class RemovedReason(models.Model):
-    reason = models.CharField(max_length=200, null=True)
+    reason = models.CharField(max_length=200, null=True, unique=True)
+
+    def save(self, *args, **kwargs):
+        self.reason = self.name.lower()
+        return super(RemovedReason, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.reason
