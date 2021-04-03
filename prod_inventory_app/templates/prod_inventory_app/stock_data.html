@@ -64,9 +64,9 @@
         </thead>
 
         <div class="pagination">
-            {% if received.has_previous %}
-                <a href="?page=1"><<</a>
-                <a href="?page={{ received.previous_page_number }}">prev</a>
+            {% if received.has_previous in request.get_full_path %}
+                <a href="{{ request.get_full_path }}&page=1"><<</a>
+                <a href="{{ request.get_full_path }}&page={{ received.previous_page_number }}">prev</a>
             {% endif %}
 
             {% for num in received.paginator.page_range %}
@@ -77,8 +77,8 @@
                 {% endif %}
             {% endfor %}
                 {% if received.has_next %}
-                    <a href="?page={{ received.next_page_number }}">next</a>
-                    <a href="?page={{ received.paginator.num_pages }}">>></a>
+                    <a href="{{ request.get_full_path }}&page={{ received.next_page_number }}">next</a>
+                    <a href="{{ request.get_full_path }}&page={{ received.paginator.num_pages }}">>></a>
                 {% endif %}
         </div>
 
