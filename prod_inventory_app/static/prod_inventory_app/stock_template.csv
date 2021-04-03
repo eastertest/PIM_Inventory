@@ -1,1 +1,1 @@
-date,product_id,quantity,vendor,unit_price
+date (yyyy-mm-dd HH:MM),product (string),quantity (integer),vendor (string),unit_price (float)

@@ -62,11 +62,22 @@ class Sale(models.Model):
         return self.product.name
 
 
+class Vendor(models.Model):
+    vendor = models.CharField(max_length=50, null=True, unique=True)
+
+    def save(self, *args, **kwargs):
+        self.vendor = self.vendor.lower()
+        return super(Vendor, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.vendor
+
+
 class Received(models.Model):
     date = models.DateTimeField(default=datetime.datetime.now)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
-    vendor = models.CharField(max_length=50, null=True, blank=True)
+    vendor1 = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, verbose_name='Vendor')
     unit_price = models.DecimalField(default=0, decimal_places=2, max_digits=10)
 
     def __str__(self):

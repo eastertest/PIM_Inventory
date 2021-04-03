@@ -28,7 +28,7 @@ class ProductForm(ModelForm):
 class ReceivedForm(ModelForm):
     class Meta:
         model = Received
-        fields = ['quantity', 'vendor', 'unit_price']
+        fields = ['quantity', 'vendor1', 'unit_price']
 
 
 class SaleForm(ModelForm):

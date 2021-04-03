@@ -14,7 +14,7 @@ import csv, io
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from .models import Product, Received, Sale, Removed
+from .models import Product, Received, Sale, Removed, Vendor
 import os
 from django.contrib.auth.decorators import login_required
 
@@ -37,7 +37,8 @@ def product_detail(request, product_id):
 
 
 def product_detail_chart(request, product_id, weeks):
-    end = datetime.date.today()
+    now = datetime.datetime.now()
+    end = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=23, minute=59)
     start = end - datetime.timedelta(weeks=weeks)
     date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days + 1)]
     quantity_list = []
@@ -76,7 +77,7 @@ def add_product(request):
                 description=column[1],
             )
         context = {}
-        return render(request, 'prod_inventory_app/sucess.html', context)
+        return render(request, 'prod_inventory_app/success.html', context)
 
     return render(request, 'prod_inventory_app/add_product.html', {'form': form})
 
@@ -93,7 +94,7 @@ def add_to_stock(request, pk):
         if form.is_valid():
             received.date = datetime.datetime.now()
             received.quantity = form.cleaned_data['quantity']
-            received.vendor = form.cleaned_data['vendor']
+            received.vendor1 = form.cleaned_data['vendor1']
             received.unit_price = form.cleaned_data['unit_price']
             received.save()
             send_mail('PIM INVENTORY Added Stock', 'HELLO, ' +  product1.name + ' has been added.',
@@ -182,7 +183,7 @@ def all_sales(request):
                 payment_received=column[5]
             )
         context = {}
-        return render(request, 'prod_inventory_app/sucess.html', context)
+        return render(request, 'prod_inventory_app/success.html', context)
 
 
 def stock_search(request):
@@ -233,11 +234,11 @@ def export_stock_csv(request):
     response['Content-Disposition'] = 'attachment; filename="stock.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['order date', 'product', 'quantity received', 'vendor', 'cost'])
+    writer.writerow(['order date', 'product', 'quantity received', 'vendor1', 'cost'])
 
     stock = Received.objects.all()
     for received in stock:
-        writer.writerow([received.date, received.product, received.quantity, received.vendor, received.unit_price])
+        writer.writerow([received.date, received.product, received.quantity, received.vendor1, received.unit_price])
     return response
 
 
@@ -253,13 +254,13 @@ def add_to_stock_csv(request):
         for column in csv.reader(io_string, delimiter=',', quotechar='|'):
             _, created = Received.objects.update_or_create(
                 date=column[0],
-                product_id=column[1],
+                product_id=Product.objects.update_or_create(name=column[1].lower())[0].id,
                 quantity=column[2],
-                vendor=column[3],
+                vendor1=Vendor.objects.update_or_create(vendor=column[3].lower())[0],
                 unit_price=column[4],
             )
         context = {}
-        return render(request, 'prod_inventory_app/sucess.html', context)
+        return render(request, 'prod_inventory_app/success.html', context)
 
 
 @login_required

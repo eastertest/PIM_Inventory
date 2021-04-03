@@ -16,7 +16,7 @@ class ReceivedFilter(django_filters.FilterSet):
 
     class Meta:
         model = Received
-        fields = ['product', 'vendor', 'start_date', 'end_date']
+        fields = ['product', 'vendor1', 'start_date', 'end_date']
         filter_overrides = {
             models.DateField: {
                 'filter_class': django_filters.DateFilter,
