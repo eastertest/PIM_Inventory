@@ -19,4 +19,6 @@ urlpatterns = [
     path('reports/', views.reports, name='reports'),
     path('remove_item/<str:pk>/', views.remove_item, name='remove_item'),
     path('signup/', views.signup, name='signup'),
+    path('account_activation_sent/', views.account_activation_sent, name='account_activation_sent'),
+    path('activate/<slug:uidb64>/<slug:token>/', views.activate, name='activate'),
 ]

@@ -1,7 +1,13 @@
 from django.shortcuts import render, redirect
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.models import User
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpRequest
 from prod_inventory_app.forms import SignUpForm, ProductForm, ReceivedForm, SaleForm, RemovedForm
 from prod_inventory_app.filters import ProductFilter, ReceivedFilter, SaleFilter
+from prod_inventory_app.tokens import account_activation_token
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
 import csv, io
@@ -77,7 +83,7 @@ def add_product(request):
 
 @login_required
 def add_to_stock(request, pk):
-    today = datetime.date.today()
+    today = datetime.datetime.now()
     product1 = Product.objects.get(id=pk)
     received = Received(product=product1, date=today)
     form = ReceivedForm(instance=received)
@@ -85,13 +91,13 @@ def add_to_stock(request, pk):
     if request.method == 'POST':
         form = ReceivedForm(request.POST)
         if form.is_valid():
-            received.date = form.cleaned_data['date']
+            received.date = datetime.datetime.now()
             received.quantity = form.cleaned_data['quantity']
             received.vendor = form.cleaned_data['vendor']
             received.unit_price = form.cleaned_data['unit_price']
             received.save()
-            send_mail('PIM INVENTORY Added Stock', 'HELLO, NEW INVENTORY has been added.',
-                      os.getenv("EMAIL_HOST"), ['mercado.ismael@gmail.com'])
+            send_mail('PIM INVENTORY Added Stock', 'HELLO, ' +  product1.name + ' has been added.',
+                      os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('home')
 
     return render(request, 'prod_inventory_app/add_to_stock.html', {'form': form, 'product': product1.name})
@@ -100,7 +106,7 @@ def add_to_stock(request, pk):
 
 @login_required
 def sell_item(request, pk):
-    today = datetime.date.today()
+    today = datetime.datetime.now()
     product1 = Product.objects.get(id=pk)
     sale = Sale(product=product1, date=today)
     form = SaleForm(instance=sale)
@@ -108,14 +114,19 @@ def sell_item(request, pk):
     if request.method == 'POST':
         form = SaleForm(request.POST)
         if form.is_valid():
-            sale.date = form.cleaned_data['date']
+            sale.date = datetime.datetime.now()
             sale.customer = form.cleaned_data['customer']
             sale.quantity = form.cleaned_data['quantity']
             sale.unit_price = form.cleaned_data['unit_price']
             sale.payment_received = form.cleaned_data['payment_received']
-            sale.save()
-            if product1.quantity() < 10:
-                messages.success(request, 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.')
+
+            if sale.get_change() > 0:
+                form.clean()
+                messages.warning(request, 'Not enough Funds to complete the transaction.')
+            else:
+                sale.save()
+                if product1.quantity() < 10:
+                    messages.success(request, 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.')
                 send_mail('PIM INVENTORY Low Stock Alert', 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.', os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('receipt')
 
@@ -253,7 +264,7 @@ def add_to_stock_csv(request):
 
 @login_required
 def remove_item(request, pk):
-    today = datetime.date.today()
+    today = datetime.datetime.now()
     product1 = Product.objects.get(id=pk)
     remove = Removed(product=product1, date=today)
     form = RemovedForm(instance=remove)
@@ -261,9 +272,9 @@ def remove_item(request, pk):
     if request.method == 'POST':
         form = RemovedForm(request.POST)
         if form.is_valid():
-            remove.date = form.cleaned_data['date']
+            remove.date = datetime.datetime.now()
             remove.quantity = form.cleaned_data['quantity']
-            remove.reason = form.cleaned_data['reason']
+            remove.reason1 = form.cleaned_data['reason1']
             remove.save()
             if product1.quantity() < 10:
                 messages.success(request, 'Your stock of ' + product1.name + ' is currently low, there is only ' + str(product1.quantity()) + ' left. Please refill.')
@@ -281,12 +292,40 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('home')
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            subject = 'Activate Your PIM Inventory Account'
+            message = render_to_string('prod_inventory_app/account_activation_email.html', {
+                                       'user': user,
+                                       'domain': current_site.domain,
+                                       'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                                       'token': account_activation_token.make_token(user),
+            })
+            user.email_user(subject, message)
+            return redirect('account_activation_sent')
     else:
         form = SignUpForm()
     return render(request, 'prod_inventory_app/signup.html', {'form': form})
+
+
+def account_activation_sent(request):
+    return render(request, 'prod_inventory_app/account_activation_sent.html')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.profile.email_confirmed = True
+        user.save()
+        login(request, user)
+        return redirect('home')
+    else:
+        return render(request, 'prod_inventory_app/account_activation_invalid.html')
