@@ -71,19 +71,19 @@
 
         <div class="pagination">
             {% if sale.has_previous in request.get_full_path %}
-            <a href="{{ request.get_full_path }}&page=1"><<</a>
-            <a href="{{ request.get_full_path }}&page={{ sale.previous_page_number }}">prev</a>
+                <a href="{{ request.get_full_path }}&page=1"><<</a>
+                <a href="{{ request.get_full_path }}&page={{ sale.previous_page_number }}">prev</a>
             {% endif %}
             {% for num in sale.paginator.page_range %}
-            {% if sale.number == num %}
-            <strong>{{ num }}</strong>
-            {% elif num > sale.number|add:'-3' and num < sale.number|add:'3' %}
-            {{ num }}
-            {% endif %}
+                {% if sale.number == num %}
+                    <strong>{{ num }}</strong>
+                {% elif num > sale.number|add:'-3' and num < sale.number|add:'3' %}
+                    {{ num }}
+                {% endif %}
             {% endfor %}
             {% if sale.has_next %}
-            <a href="{{ request.get_full_path }}&page={{ sale.next_page_number }}">next</a>
-            <a href="{{ request.get_full_path }}&page={{ sale.paginator.num_pages }}">>></a>
+                <a href="{{ request.get_full_path }}&page={{ sale.next_page_number }}">next</a>
+                <a href="{{ request.get_full_path }}&page={{ sale.paginator.num_pages }}">>></a>
             {% endif %}
         </div>
 
