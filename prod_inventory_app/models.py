@@ -72,11 +72,22 @@ class Received(models.Model):
     def __str__(self):
         return self.product.name
 
+class RemovedReason(models.Model):
+    reason = models.CharField(max_length=200, null=True, unique=True)
+
+    def save(self, *args, **kwargs):
+        self.reason = self.name.lower()
+        return super(RemovedReason, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.reason
+
+
 class Removed(models.Model):
     date = models.DateTimeField(default=datetime.datetime.now)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
-    reason = models.CharField(max_length=200, null=True, blank=True)
+    reason1 = models.ForeignKey(RemovedReason, on_delete=models.CASCADE, null=True, verbose_name='Reason')
 
     def __str__(self):
         return self.product.name

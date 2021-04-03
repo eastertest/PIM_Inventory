@@ -273,10 +273,10 @@ def remove_item(request, pk):
         if form.is_valid():
             remove.date = datetime.datetime.now()
             remove.quantity = form.cleaned_data['quantity']
-            remove.reason = form.cleaned_data['reason']
+            remove.reason1 = form.cleaned_data['reason1']
             remove.save()
             if product1.quantity() < 10:
-                messages.success(request, 'HELLO, Please Add New Stock to Inventory.') 
+                messages.success(request, 'HELLO, Please Add New Stock to Inventory.')
                 send_mail('PIM INVENTORY Low Stock Alert', 'HELLO, Please Add Inventory' + ' for ' + product1.name, os.getenv("EMAIL_HOST_USER"), [request.user.email])
             return redirect('home')
 

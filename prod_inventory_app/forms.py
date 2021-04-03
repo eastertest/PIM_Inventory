@@ -40,4 +40,4 @@ class SaleForm(ModelForm):
 class RemovedForm(ModelForm):
     class Meta:
         model = Removed
-        fields = ['quantity', 'reason']
+        fields = ['quantity', 'reason1']
