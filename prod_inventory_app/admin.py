@@ -4,7 +4,7 @@ from .models import Product, Sale, Received, Removed, RemovedReason, Vendor
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'description', 'quantity']
+    list_display = ['id', 'name', 'description', 'quantity', 'sales_last_thirty_days', 'sales_rate_per_day']
     ordering = ['-id']
     list_filter = ['name']
 

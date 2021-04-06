@@ -4,6 +4,7 @@ from django.db.models import Sum
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 class Product(models.Model):
@@ -38,6 +39,19 @@ class Product(models.Model):
             removed = 0
         return received - sold - removed
 
+    def sales_last_thirty_days(self):
+        now = timezone.now()
+        thirty_days_ago = now - datetime.timedelta(days=30)
+        sold = Sale.objects.filter(product=self).filter(date__gte=thirty_days_ago).aggregate(Sum('quantity'))['quantity__sum']
+        if sold is None:
+            sold = 0
+        return sold
+
+    def sales_rate_per_day(self):
+        last_thirty_days = self.sales_last_thirty_days()
+        sales_rate = last_thirty_days / 30
+        return sales_rate
+
     def __str__(self):
         return self.name
 
@@ -59,7 +73,7 @@ class Sale(models.Model):
         return (change)
 
     def __str__(self):
-        return self.product.name
+        return self.product.name + " " + str(self.date)
 
 
 class Vendor(models.Model):
