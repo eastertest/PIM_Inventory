@@ -1,4 +1,4 @@
-date,product,quantity,vendor1,unit_price
+date (yyyy-mm-dd HH:MM),product (string),quantity (integer),vendor (string),unit_price (float)
 2017-12-30 00:00:00+00:00,apple,125,vendor a,0.75
 2017-12-30 00:00:00+00:00,coconut,150,vendor c,0.88
 2017-12-30 00:00:00+00:00,durian,100,vendor b,0.9
