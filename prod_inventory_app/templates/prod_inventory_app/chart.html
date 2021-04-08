@@ -27,6 +27,14 @@
             fill: false,
             data: {{quantity|safe}},
             lineTension: 0,
+        },{
+            label:"{{product}} predicted zero",
+            backgroundColor: "teal",
+            borderColor: "teal",
+            borderDash: [10, 5],
+            fill: false,
+            data: {{predicted|safe}},
+            lineTension: 0,
         },]
 
     }

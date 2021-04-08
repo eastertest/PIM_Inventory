@@ -52,6 +52,16 @@ class Product(models.Model):
         sales_rate = last_thirty_days / 30
         return sales_rate
 
+    def inventory_zero(self):
+        sales_rate = self.sales_rate_per_day()
+        if sales_rate <= 0:
+            return -1
+        now = timezone.now()
+        quantity = self.quantity()
+        days_until_zero = quantity / sales_rate
+        date_zero = now + datetime.timedelta(days=days_until_zero)
+        return date_zero
+
     def __str__(self):
         return self.name
 
