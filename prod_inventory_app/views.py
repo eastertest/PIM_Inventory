@@ -43,15 +43,27 @@ def product_detail_chart(request, product_id, weeks):
     date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days + 1)]
     quantity_list = []
     date_list = []
+    predicted_list = []
     product = Product.objects.get(id=product_id)
     for date in date_generated:
         quantity = product.quantityovertime(date)
         quantity_list.append(quantity)
         date_list.append(str(date))
 
+    date_zero = product.inventory_zero()
+    if date_zero != -1:
+        date_list.append(str(date_zero))
+        for i in quantity_list[:-1]:
+            predicted_list.append('null')
+        predicted_list.append(quantity_list[-1])
+        predicted_list.append(0)
+        quantity_list.append('null')
+        print(predicted_list)
+
     return render(request, 'prod_inventory_app/chart.html', {
         'dates': date_list,
         'quantity': quantity_list,
+        'predicted': predicted_list,
         'product': product,
         'title': str(product) + " over " + str(weeks) + " weeks",
     })
