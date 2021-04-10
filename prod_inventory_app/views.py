@@ -165,7 +165,19 @@ def all_sales(request):
               'page': page,
               }
     if request.method == "GET":
-        return render(request, template, prompt)
+        if request.GET.get('download', None) == 'csv':
+            sale = sale_filters.qs
+            print(sale)
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="sales.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['date sold', 'customer name', 'item bought', 'quantity', 'unit price', 'payment received'])
+            for s in sale:
+                writer.writerow([s.date, s.customer, s.product, s.quantity, s.unit_price, s.payment_received])
+            return response
+        else:
+            return render(request, template, prompt)
     if request.method == 'POST':
         csv_file = request.FILES['file']
         if not csv_file.name.endswith('.csv'):

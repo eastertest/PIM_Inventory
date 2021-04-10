@@ -27,6 +27,13 @@
     </form>
 </div>
 
+	<a href="{{request.get_full_path}}&download=csv">
+        <input
+            value="  Sales  "
+            class="btn btn-secondary btn"
+            type="button"/>
+    </a>
+</div>
 
 <div class="container">
     <a href="{% static 'prod_inventory_app/sales_template.csv' %}">
