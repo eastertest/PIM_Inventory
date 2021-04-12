@@ -298,7 +298,22 @@ def remove_item(request, pk):
 
 
 def reports(request):
-    return render(request, 'prod_inventory_app/reports.html')
+    prods = Product.objects.all()
+    product_filters = ProductFilter(request.GET, queryset=prods)
+    products = product_filters.qs
+    gross = Sale.gross_profit()
+    trend = Sale.trends()
+    rate_of_sale = Sale.rate_of_sales_growth()
+    ytd = Sale.year_to_date_sales()
+    products = products.order_by('id')
+    context = {
+        'gross':gross,
+        'trend':trend,
+        'rate_of_sale':rate_of_sale,
+        'ytd':ytd,
+        'products':products,
+    }
+    return render(request, 'prod_inventory_app/reports.html', context)
 
 
 def signup(request):

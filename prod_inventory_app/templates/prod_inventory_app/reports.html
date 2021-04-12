@@ -2,8 +2,8 @@
 {% load crispy_forms_tags%}
 {% load static %}
 {% block content%}
-<br/>
 
+<br/>
 
 <div class="container">
     <h1 class="text-center">REPORTS</h1><br>
@@ -40,6 +40,95 @@
             class="btn btn-secondary btn"
             type="button"/>
     </a>
+</div>
+
+    <br/><br/><br/><br/>
+
+<div class="container">
+    <table class="table">
+        <thead class="thead-dark">
+        SALES TRENDS
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Percentage (%)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in trend.items %}
+        <tr><td>{{key}}</td><td>{{value}} %</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table">
+        <thead class="thead-dark">
+        GROSS PROFITS
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Total ($)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in gross.items %}
+        <tr><td>{{key}}</td><td>$ {{value}}</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table">
+        <thead class="thead-dark">
+        RATE OF SALES GROWTH
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Rate (%)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in rate_of_sale.items %}
+        <tr><td>{{key}}</td><td>{{value}}% growth</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table">
+        <thead class="thead-dark">
+        YEAR-TO-DATE
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Total ($)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in ytd.items %}
+        <tr><td>{{key}}</td><td>$ {{value}}</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table">
+        <thead class="thead-dark">
+        TIME TO 0% INVENTORY
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Total  Items</th>
+            <th scope="col">Days to 0 %</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for product in products %}
+        <tbody>
+        <tr><td>{{product.name}}</td>
+            <td>{{product.quantity}}</td>
+            <td>{{product.days_left}} days</td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
 </div>
 
     {% endblock %}
