@@ -168,13 +168,11 @@ def all_sales(request):
     page = request.GET.get('page')
     sale = paginator.get_page(page)
 
-    prompt = {'sales': sales,
-              'total': total,
+    prompt = {'total': total,
               'change': change,
               'net': net,
               'sale_filters': sale_filters,
               'sale': sale,
-              'page': page,
               }
     if request.method == "GET":
         return render(request, template, prompt)
