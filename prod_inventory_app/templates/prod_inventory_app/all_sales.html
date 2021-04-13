@@ -70,22 +70,15 @@
         </thead>
 
         <div class="pagination">
-
             <span class="step-links">
             {% if sale.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ sale.previous_page_number }}">previous</a>
                 <a href="{{ request.get_full_path }}&page=1">&laquo; first</a>
                 <a href="{{ request.get_full_path }}&page={{ sale.previous_page_number }}">previous</a>
             {% endif %}
-
             <span class="current">
                 Page {{ sale.number }} of {{ sale.paginator.num_pages }}.
             </span>
-
             {% if sale.has_next %}
-                <a href="?page={{ sale.next_page_number }}">next</a>
-                <a href="?page={{ sale.paginator.num_pages }}">last &raquo;</a>
                 <a href="{{ request.get_full_path }}&page={{ sale.next_page_number }}">next</a>
                 <a href="{{ request.get_full_path }}&page={{ sale.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
