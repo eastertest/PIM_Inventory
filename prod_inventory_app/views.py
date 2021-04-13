@@ -238,8 +238,8 @@ def stock_search(request):
             _, created = Received.objects.update_or_create(
                 date=column[0],
                 product_id=Product.objects.update_or_create(name=column[1].lower())[0].id,
-                vendor1=column[2],
-                quantity=column[3],
+                quantity=column[2],
+                vendor1=Vendor.objects.update_or_create(vendor=column[3].lower())[0],
                 unit_price=column[4],
             )
         context = {}
