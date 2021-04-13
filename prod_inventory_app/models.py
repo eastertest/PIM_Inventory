@@ -62,6 +62,18 @@ class Product(models.Model):
         date_zero = now + datetime.timedelta(days=days_until_zero)
         return date_zero
 
+    def year_to_date_prod(self):
+        sales_ytd = Sale.objects.all().filter(date__year=2021,product=self)
+        total_ytd = sum([sale.quantity * sale.unit_price for sale in sales_ytd])
+        return total_ytd
+
+    def days_left(self):
+        if self.sales_rate_per_day() == 0:
+            return -1
+        else:
+            days_left = int(self.quantity() / self.sales_rate_per_day())
+        return days_left
+
     def __str__(self):
         return self.name
 
@@ -81,6 +93,54 @@ class Sale(models.Model):
     def get_change(self):
         change = self.get_total() - self.payment_received
         return (change)
+
+    def trends():
+        dates = Sale.objects.all().dates('date', 'year')
+        years = [date.year for date in dates]
+        perc = {}
+        perc.update({years[0]:str(round(100,1))})
+        for i in range(1,len(years) - 1):
+            sales_base = Sale.objects.all().filter(date__year=years[i-1])
+            sales_yr = Sale.objects.all().filter(date__year=years[i])
+            total_base = sum([sale.quantity * sale.unit_price for sale in sales_base])
+            total_yr = sum([sale.quantity * sale.unit_price for sale in sales_yr])
+            trend_yr = 100 * total_yr/total_base
+            perc.update({years[i]:str(round(trend_yr,1))})
+        return perc
+
+    def gross_profit():
+        dates = Sale.objects.all().dates('date', 'year')
+        years = [date.year for date in dates]
+        gp = {}
+        for i in range(0,len(years) - 1):
+            sales_yr = Sale.objects.all().filter(date__year=years[i])
+            total_yr = sum([sale.quantity * sale.unit_price for sale in sales_yr])
+            inv_yr = Received.objects.all().filter(date__year=years[i])
+            inv_cost_yr = sum([inv_prod.quantity * inv_prod.unit_price for inv_prod in inv_yr])
+            gp_yr = total_yr - inv_cost_yr
+            gp.update({years[i]:str(gp_yr)})
+        return gp
+
+    def year_to_date_sales():
+        now = timezone.now()
+        year=now.year
+        sales_ytd = Sale.objects.all().filter(date__year=year)
+        total_ytd = sum([sale.quantity * sale.unit_price for sale in sales_ytd])
+        ytd = {str(year):str(total_ytd)}
+        return ytd
+
+    def rate_of_sales_growth():
+        dates = Sale.objects.all().dates('date', 'year')
+        years = [date.year for date in dates]
+        rosg = {}
+        for i in range(1,len(years) - 1):
+            sales_yr = Sale.objects.all().filter(date__year=years[i])
+            sales_yr_min1 = Sale.objects.all().filter(date__year=years[i - 1])
+            total_yr = sum([sale.quantity * sale.unit_price for sale in sales_yr])
+            total_yr_min1 = sum([sale.quantity * sale.unit_price for sale in sales_yr_min1])
+            rosg_yr = 100 * (total_yr - total_yr_min1) / total_yr_min1
+            rosg.update({years[i]:str(round(rosg_yr,2))})
+        return rosg
 
     def __str__(self):
         return self.product.name + " " + str(self.date)
