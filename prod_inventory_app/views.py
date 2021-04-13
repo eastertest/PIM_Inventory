@@ -172,7 +172,7 @@ def all_sales(request):
             response['Content-Disposition'] = 'attachment; filename="sales.csv"'
 
             writer = csv.writer(response)
-            writer.writerow(['date sold', 'customer name', 'item bought', 'quantity', 'unit price', 'payment received'])
+            writer.writerow(['date sold (yyyy-mm-dd HH:MM)', 'customer name (string)', 'item bought (string)', 'quantity (integer)', 'unit price (float)', 'payment received (float)'])
             for s in sale:
                 writer.writerow([s.date, s.customer, s.product, s.quantity, s.unit_price, s.payment_received])
             return response
@@ -223,7 +223,7 @@ def stock_search(request):
             response['Content-Disposition'] = 'attachment; filename="stock.csv"'
 
             writer = csv.writer(response)
-            writer.writerow(['order date', 'product', 'quantity received', 'vendor1', 'cost'])
+            writer.writerow(['date (yyyy-mm-dd HH:MM)', 'product (string)', 'quantity received (integer)', 'vendor1 (string)', 'cost (float)'])
             for r in received:
                 writer.writerow([received.date, received.product, received.quantity, received.vendor1, received.unit_price])
             return response
