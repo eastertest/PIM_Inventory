@@ -68,7 +68,10 @@ class Product(models.Model):
         return total_ytd
 
     def days_left(self):
-        days_left = int(self.quantity() / self.sales_rate_per_day())
+        if self.sales_rate_per_day() == 0:
+            return -1
+        else:
+            days_left = int(self.quantity() / self.sales_rate_per_day())
         return days_left
 
     def __str__(self):
