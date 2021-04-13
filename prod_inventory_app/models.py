@@ -119,6 +119,7 @@ class Sale(models.Model):
             inv_cost_yr = sum([inv_prod.quantity * inv_prod.unit_price for inv_prod in inv_yr])
             gp_yr = total_yr - inv_cost_yr
             gp.update({years[i]:str(gp_yr)})
+        print(gp)
         return gp
 
     def year_to_date_sales():

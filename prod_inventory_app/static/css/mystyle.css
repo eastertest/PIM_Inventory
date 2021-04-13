@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
+
+
+body{
+    background-color: #ebeff5;
+    font-family: 'Lato', sans-serif;
+    text-shadow: 1px 0px 0px rgba(0,0,0,0.2); 
+}
+h1 { 
+    color: black; font-size: 62px; font-weight: 800; font-family: 'Lato', sans-serif; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;font-weight: bold;
+    text-shadow: 3px px 0px rgba(0,0,0,0.2); 
+}
+
+header{
+    font-family: 'Lato', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10%;
+}
+
+.navbar-toggler li{
+    display: inline;
+    padding: 0px 20px;
+}
+
+.navbar-toggler li a {
+    transition: all 0.3s ease 0s;
+
+}
+
+.navbar-toggler li a:hover {
+    color: 0088a9
+
+}
+
+.btn-secondary {
+    padding: 9px 20px;
+    background-color:#1abc9c;
+    border: none;
+    border-radius: 40px;
+    transition: all 0.3s ease 0s;
+    font-family: "Helvetica", sans-serif;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 16px ;
+    color: #edf0f1;
+    text-decoration: none;
+    size: 50px;
+}
+
+.btn-secondary:hover{
+    background-color: rgba(0,136,169,0.8);
+    font-family: 'Lato', sans-serif;
+}
+
+td{
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    font-size: 16px ;
+}
+
+th{
+    font-family: 'Lato', sans-serif; 
+    font-size: 16px ;
+    color:  rgba(0,136,169,0.8);;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 8vh;
+    background-color: rgba(0,136,169,1);
+    font-family: "Helvetica", sans-serif;
+
+
+}
+
+.table tr{
+    border-bottom: 1px solid #666;
+}
+.table tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+.thead-content{
+    background-color: rgba(0,136,169,1);
+    color: white
+}
+
+.row-content {
+    color: white;
+}
+
+nav a{
+	font-size: 15px;
+	text-transform: uppercase;
+	color: white;
+	text-decoration: none;
+	line-height: 50px;
+	position: relative;
+	z-index: 1;
+	display: inline-block;
+	text-align: center;
+    font-family: 'Lato', sans-serif; 
+  
+    
+}
+
+.navbar-nav {
+    float: none;
+    position: absolute;
+    top: 50%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    
+  }
+
+tr{
+    background-color: #5ca0f2;
+    background-image: linear-gradient(315deg, rgb(204, 242, 255) 0%, #edf0f1 74%);
+}
+
+.controls{
+    padding-bottom: 10px;
+}
+
+.nav-login{
+    left:430px;
+}
+
+.dropdown-item{
+    left:430px;
+}
+
+
+
+
+
