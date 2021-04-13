@@ -75,26 +75,28 @@
     </a>
         </thead>
 
+
+        {% load tags %}
         <div class="pagination">
-            {% if sale.has_previous in request.get_full_path %}
-                <a href="{{ request.get_full_path }}&page=1"><<</a>
-                <a href="{{ request.get_full_path }}&page={{ sale.previous_page_number }}">prev</a>
-            {% endif %}
-            {% for num in sale.paginator.page_range %}
-                {% if sale.number == num %}
-                    <strong>{{ num }}</strong>
-                {% elif num > sale.number|add:'-3' and num < sale.number|add:'3' %}
-                    {{ num }}
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?{% param_replace page=1 %}">&laquo; first</a>
+                    <a href="?{% param_replace page=page_obj.previous_page_number %}">previous</a>
                 {% endif %}
-            {% endfor %}
-            {% if sale.has_next %}
-                <a href="{{ request.get_full_path }}&page={{ sale.next_page_number }}">next</a>
-                <a href="{{ request.get_full_path }}&page={{ sale.paginator.num_pages }}">>></a>
-            {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?{% param_replace page=page_obj.next_page_number %}">next</a>
+                    <a href="?{% param_replace page=page_obj.paginator.num_pages }">last &raquo;</a>
+                {% endif %}
+            </span>
         </div>
 
 
-        {% for sal in sale %}
+        {% for sal in page_obj %}
             <tbody>
             <tr>
                 <td>{{sal.date }}</td>

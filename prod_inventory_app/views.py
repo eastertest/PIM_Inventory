@@ -43,15 +43,27 @@ def product_detail_chart(request, product_id, weeks):
     date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days + 1)]
     quantity_list = []
     date_list = []
+    predicted_list = []
     product = Product.objects.get(id=product_id)
     for date in date_generated:
         quantity = product.quantityovertime(date)
         quantity_list.append(quantity)
         date_list.append(str(date))
 
+    date_zero = product.inventory_zero()
+    if date_zero != -1:
+        date_list.append(str(date_zero))
+        for i in quantity_list[:-1]:
+            predicted_list.append('null')
+        predicted_list.append(quantity_list[-1])
+        predicted_list.append(0)
+        quantity_list.append('null')
+        print(predicted_list)
+
     return render(request, 'prod_inventory_app/chart.html', {
         'dates': date_list,
         'quantity': quantity_list,
+        'predicted': predicted_list,
         'product': product,
         'title': str(product) + " over " + str(weeks) + " weeks",
     })
@@ -147,22 +159,15 @@ def receipt_detail(request, receipt_id):
 def all_sales(request):
     template = 'prod_inventory_app/all_sales.html'
     sales = Sale.objects.all().order_by('-date')
-    total = sum([sale.quantity * sale.unit_price for sale in sales])
-    change = sum([sale.get_change() for sale in sales])
-    net = total - change
     sale_filters = SaleFilter(request.GET, queryset=sales)
     sale = sale_filters.qs
     paginator = Paginator(sale, 20)
     page = request.GET.get('page')
-    sale = paginator.get_page(page)
+    page_obj = paginator.get_page(page)
 
-    prompt = {'sales': sales,
-              'total': total,
-              'change': change,
-              'net': net,
-              'sale_filters': sale_filters,
+    prompt = {'sale_filters': sale_filters,
               'sale': sale,
-              'page': page,
+              'page_obj': page_obj,
               }
     if request.method == "GET":
         if request.GET.get('download', None) == 'csv':
@@ -200,25 +205,19 @@ def all_sales(request):
 
 def stock_search(request):
     template = 'prod_inventory_app/stock_data.html'
-    product = Product.objects.all().order_by('-id')
     received = Received.objects.all().order_by('-id')
-    product_filters = ProductFilter(request.GET, queryset=product)
     received_filters = ReceivedFilter(request.GET, queryset=received)
-    products = product_filters.qs
     received = received_filters.qs
     paginator = Paginator(received, 20)
     page = request.GET.get('page')
-    received = paginator.get_page(page)
-
-    prompt = {'product': products, 'product_filters': product_filters,
-        'received': received, 'received_filters': received_filters,
-        'page': page,
+    page_obj = paginator.get_page(page)
+    prompt = {'received_filters': received_filters,
+              'page_obj': page_obj,
         }
     if request.method == "GET":
         if request.GET.get('download', None) == 'csv':
             products = product_filters.qs
             received = received_filters.qs
-            print(received)
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="stock.csv"'
 
@@ -247,6 +246,10 @@ def stock_search(request):
         context = {}
         return render(request, 'prod_inventory_app/success.html', context)
 
+    return render(request, 'prod_inventory_app/stock_data.html', {
+        'received_filters': received_filters,
+        'page_obj': page_obj,
+    })
 
 
 def export_products_csv(request):
@@ -275,17 +278,7 @@ def export_sales_csv(request):
     return response
 
 
-def export_stock_csv(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="stock.csv"'
 
-    writer = csv.writer(response)
-    writer.writerow(['order date', 'product', 'quantity received', 'vendor1', 'cost'])
-
-    stock = Received.objects.all()
-    for received in stock:
-        writer.writerow([received.date, received.product, received.quantity, received.vendor1, received.unit_price])
-    return response
 
 
 @login_required
@@ -332,7 +325,22 @@ def remove_item(request, pk):
 
 
 def reports(request):
-    return render(request, 'prod_inventory_app/reports.html')
+    prods = Product.objects.all()
+    product_filters = ProductFilter(request.GET, queryset=prods)
+    products = product_filters.qs
+    gross = Sale.gross_profit()
+    trend = Sale.trends()
+    rate_of_sale = Sale.rate_of_sales_growth()
+    ytd = Sale.year_to_date_sales()
+    products = products.order_by('id')
+    context = {
+        'gross':gross,
+        'trend':trend,
+        'rate_of_sale':rate_of_sale,
+        'ytd':ytd,
+        'products':products,
+    }
+    return render(request, 'prod_inventory_app/reports.html', context)
 
 
 def signup(request):
