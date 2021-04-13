@@ -172,14 +172,13 @@ def all_sales(request):
     if request.method == "GET":
         if request.GET.get('download', None) == 'csv':
             sale = sale_filters.qs
-            print(sale)
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="sales.csv"'
 
             writer = csv.writer(response)
-            writer.writerow(['date sold (yyyy-mm-dd HH:MM)', 'customer name (string)', 'item bought (string)', 'quantity (integer)', 'unit price (float)', 'payment received (float)'])
+            writer.writerow(['date sold (yyyy-mm-dd HH:MM)', 'item bought (string)', 'customer name (string)', 'quantity (integer)', 'unit price (float)', 'payment received (float)'])
             for s in sale:
-                writer.writerow([s.date, s.customer, s.product, s.quantity, s.unit_price, s.payment_received])
+                writer.writerow([s.date, s.product, s.customer, s.quantity, s.unit_price, s.payment_received])
             return response
         else:
             return render(request, template, prompt)
