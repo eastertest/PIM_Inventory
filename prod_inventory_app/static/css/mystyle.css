@@ -131,11 +131,11 @@ tr{
     left:430px;
 }
 
-.dropdown-item{
-    left:430px;
+
+.dropdown-toggle{
+    left:410px; 
 }
-
-
-
-
-
+.dropdown-menu{
+    top: 61px;
+    left: 370px;
+}
