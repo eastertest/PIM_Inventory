@@ -65,6 +65,7 @@
     <table class="table" style="text-align:center;">
         <thead class="thead-dark">
         <tr>
+            <th scope="col">Item ID</th>
             <th scope="col">Item Name</th>
             <th scope="col">Description</th>
             <th scope="col">Quantity</th>
@@ -95,6 +96,7 @@
         {% for product in products %}
             <tbody style="text-align:center;">
             <tr>
+                <td>{{product.id}}</td>
                 <td>{{product.name}}</td>
                 <td>{{product.description}}</td>
                 <td>{{product.quantity}}</td>
