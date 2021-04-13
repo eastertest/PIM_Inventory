@@ -159,22 +159,15 @@ def receipt_detail(request, receipt_id):
 def all_sales(request):
     template = 'prod_inventory_app/all_sales.html'
     sales = Sale.objects.all().order_by('-date')
-    total = sum([sale.quantity * sale.unit_price for sale in sales])
-    change = sum([sale.get_change() for sale in sales])
-    net = total - change
     sale_filters = SaleFilter(request.GET, queryset=sales)
     sale = sale_filters.qs
-    paginator = Paginator(sale, 20)
+    paginator = Paginator(sale, 2)
     page = request.GET.get('page')
-    sale = paginator.get_page(page)
+    page_obj = paginator.get_page(page)
 
-    prompt = {'sales': sales,
-              'total': total,
-              'change': change,
-              'net': net,
-              'sale_filters': sale_filters,
+    prompt = {'sale_filters': sale_filters,
               'sale': sale,
-              'page': page,
+              'page_obj': page_obj,
               }
     if request.method == "GET":
         return render(request, template, prompt)
