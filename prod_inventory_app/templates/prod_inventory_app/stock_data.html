@@ -63,26 +63,26 @@
         </tr>
         </thead>
 
+        {% load tags %}
         <div class="pagination">
-            {% if received.has_previous in request.get_full_path %}
-                <a href="{{ request.get_full_path }}&page=1"><<</a>
-                <a href="{{ request.get_full_path }}&page={{ received.previous_page_number }}">prev</a>
-            {% endif %}
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?{% param_replace page=1 %}">&laquo; first</a>
+                    <a href="?{% param_replace page=page_obj.previous_page_number %}">previous</a>
+                {% endif %}
 
-            {% for num in received.paginator.page_range %}
-                {% if received.number == num %}
-                    <strong>{{ num }}</strong>
-                {% elif num > received.number|add:'-3' and num < received.number|add:'3' %}
-                    {{ num }}
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?{% param_replace page=page_obj.next_page_number %}">next</a>
+                    <a href="?{% param_replace page=page_obj.paginator.num_pages }">last &raquo;</a>
                 {% endif %}
-            {% endfor %}
-                {% if received.has_next %}
-                    <a href="{{ request.get_full_path }}&page={{ received.next_page_number }}">next</a>
-                    <a href="{{ request.get_full_path }}&page={{ received.paginator.num_pages }}">>></a>
-                {% endif %}
+            </span>
         </div>
 
-        {% for rec in received %}
+        {% for rec in page_obj %}
         <tbody>
         <tr>
             <td>{{ rec.date }}</td>

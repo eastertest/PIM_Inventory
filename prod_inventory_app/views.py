@@ -161,7 +161,7 @@ def all_sales(request):
     sales = Sale.objects.all().order_by('-date')
     sale_filters = SaleFilter(request.GET, queryset=sales)
     sale = sale_filters.qs
-    paginator = Paginator(sale, 2)
+    paginator = Paginator(sale, 20)
     page = request.GET.get('page')
     page_obj = paginator.get_page(page)
 
@@ -192,19 +192,15 @@ def all_sales(request):
 
 
 def stock_search(request):
-    product = Product.objects.all().order_by('-id')
     received = Received.objects.all().order_by('-id')
-    product_filters = ProductFilter(request.GET, queryset=product)
     received_filters = ReceivedFilter(request.GET, queryset=received)
-    products = product_filters.qs
     received = received_filters.qs
     paginator = Paginator(received, 20)
     page = request.GET.get('page')
-    received = paginator.get_page(page)
+    page_obj = paginator.get_page(page)
     return render(request, 'prod_inventory_app/stock_data.html', {
-        'product': products, 'product_filters': product_filters,
-        'received': received, 'received_filters': received_filters,
-        'page': page,
+        'received_filters': received_filters,
+        'page_obj': page_obj,
     })
 
 
