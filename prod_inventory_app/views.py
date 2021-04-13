@@ -199,6 +199,7 @@ def all_sales(request):
 
 
 def stock_search(request):
+    template = 'prod_inventory_app/stock_data.html'
     product = Product.objects.all().order_by('-id')
     received = Received.objects.all().order_by('-id')
     product_filters = ProductFilter(request.GET, queryset=product)
@@ -208,11 +209,44 @@ def stock_search(request):
     paginator = Paginator(received, 20)
     page = request.GET.get('page')
     received = paginator.get_page(page)
-    return render(request, 'prod_inventory_app/stock_data.html', {
-        'product': products, 'product_filters': product_filters,
+
+    prompt = {'product': products, 'product_filters': product_filters,
         'received': received, 'received_filters': received_filters,
         'page': page,
-    })
+        }
+    if request.method == "GET":
+        if request.GET.get('download', None) == 'csv':
+            products = product_filters.qs
+            received = received_filters.qs
+            print(received)
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="stock.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['order date', 'product', 'quantity received', 'vendor1', 'cost'])
+            for r in received:
+                writer.writerow([received.date, received.product, received.quantity, received.vendor1, received.unit_price])
+            return response
+        else:
+            return render(request, template, prompt)
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'NOT A CSV FILE')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            _, created = Received.objects.update_or_create(
+                date=column[0],
+                product_id=Product.objects.update_or_create(name=column[1].lower())[0].id,
+                vendor1=column[2],
+                quantity=column[3],
+                unit_price=column[4],
+            )
+        context = {}
+        return render(request, 'prod_inventory_app/success.html', context)
+
 
 
 def export_products_csv(request):
