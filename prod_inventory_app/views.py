@@ -216,7 +216,6 @@ def stock_search(request):
         }
     if request.method == "GET":
         if request.GET.get('download', None) == 'csv':
-            products = product_filters.qs
             received = received_filters.qs
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="stock.csv"'
@@ -224,7 +223,7 @@ def stock_search(request):
             writer = csv.writer(response)
             writer.writerow(['date (yyyy-mm-dd HH:MM)', 'product (string)', 'quantity received (integer)', 'vendor1 (string)', 'cost (float)'])
             for r in received:
-                writer.writerow([received.date, received.product, received.quantity, received.vendor1, received.unit_price])
+                writer.writerow([r.date, r.product, r.quantity, r.vendor1, r.unit_price])
             return response
         else:
             return render(request, template, prompt)
@@ -278,7 +277,17 @@ def export_sales_csv(request):
     return response
 
 
+def export_stock_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="stock.csv"'
 
+    writer = csv.writer(response)
+    writer.writerow(['order date', 'product', 'quantity received', 'vendor1', 'cost'])
+
+    stock = Received.objects.all()
+    for received in stock:
+        writer.writerow([received.date, received.product, received.quantity, received.vendor1, received.unit_price])
+    return response
 
 
 @login_required
