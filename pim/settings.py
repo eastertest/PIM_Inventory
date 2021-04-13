@@ -137,9 +137,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/home/'
-
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]

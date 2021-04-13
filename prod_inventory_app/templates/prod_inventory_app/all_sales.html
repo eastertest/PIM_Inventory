@@ -2,6 +2,7 @@
 {% load crispy_forms_tags%}
 {% load static %}
 {% block content%}
+
 <br>
 
 <div class="container">
@@ -9,7 +10,7 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">UPLOAD SALES</th>
+            <th class= row-content scope="col">UPLOAD SALES</th>
         </tr>
         </thead>
     </table>
@@ -43,7 +44,7 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">SEARCH SALES</th>
+            <th class= row-content scope="col">SEARCH SALES</th>
         </tr>
         </thead>
     </table>
@@ -60,12 +61,12 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">Date Sold</th>
-            <th scope="col">Customer name</th>
-            <th scope="col">Item Bought</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Unit Price($)</th>
-            <th scope="col">Total</th>
+            <th class= row-content scope="col">Date Sold</th>
+            <th class= row-content scope="col">Customer name</th>
+            <th class= row-content scope="col">Item Bought</th>
+            <th class= row-content scope="col">Quantity</th>
+            <th class= row-content scope="col">Unit Price($)</th>
+            <th class= row-content scope="col">Total</th>
         </tr>
         </thead>
 
@@ -89,7 +90,9 @@
 
 
         {% for sal in sale %}
+       
             <tbody>
+            
             <tr>
                 <td>{{sal.date }}</td>
                 <td>{{sal.customer | title}}</td>
@@ -98,7 +101,10 @@
                 <td>${{sal.unit_price}}</td>
                 <td>${{sal.get_total}}</td>
             </tr>
+    
             </tbody>
+        
+            
         {% endfor %}
     </table>
 
