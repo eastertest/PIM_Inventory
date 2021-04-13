@@ -2,8 +2,8 @@
 {% load crispy_forms_tags%}
 {% load static %}
 {% block content%}
-<br/>
 
+<br/>
 
 <div class="container">
     <h1 class="text-center">REPORTS</h1><br>
@@ -42,4 +42,102 @@
     </a>
 </div>
 
-    {% endblock %}
+<br/><br/><br/><br/>
+
+<div class="container">
+    <table class="table" style="text-align:center;">
+        <thead class="thead-dark">
+        <h4>SALES TREND</h4>
+        <h5>Used to estimate the future demand, whether that demand will increase or decrease,
+            and by how much. Knowing the sales trend percentages helps you make these predictions.
+            Sales trend for a year makes a relation of sales for a particular year in relation to the base year.</h5>
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Percentage (%)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in trend.items %}
+        <tr><td>{{key}}</td><td>{{value}} %</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table" style="text-align:center;">
+        <thead class="thead-dark">
+        <h4>GROSS PROFITS</h4>
+        <h5>Net sales minus the cost of goods sold.</h5>
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Total ($)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in gross.items %}
+        <tr><td>{{key}}</td><td>$ {{value}}</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table" style="text-align:center;">
+        <thead class="thead-dark">
+        <h4>RATE OF SALES GROWTH</h4>
+        <h5>Used to know how the approach to drive revenue growth is working.
+            It calculates the difference in sales for the current period and the previous period in relation to the
+            previous period sales.</h5>
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Rate (%)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in rate_of_sale.items %}
+        <tr><td>{{key}}</td><td>{{value}}% growth</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table" style="text-align:center;">
+        <thead class="thead-dark">
+        <h4>YEAR-TO-DATE</h4>
+        <h5>Net sales for the period of time beginning the first day of the current year up to the current date.</h5>
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Total ($)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for key, value in ytd.items %}
+        <tr><td>{{key}}</td><td>$ {{value}}</td></tr>
+        {% endfor %}
+    </table>
+
+    <br/><br/><br/><br/>
+
+    <table class="table" style="text-align:center;">
+        <thead class="thead-dark">
+        <h4>TIME TO 0% INVENTORY</h4>
+        <h5>How much will last the current inventory based on previous sales.</h5>
+        <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Total  Items</th>
+            <th scope="col">Days to 0 %</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for product in products %}
+        <tbody>
+        <tr><td>{{product.name}}</td>
+            <td>{{product.quantity}}</td>
+            <td>{{product.days_left}} days</td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% endblock %}
