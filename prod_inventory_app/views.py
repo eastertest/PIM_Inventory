@@ -170,7 +170,19 @@ def all_sales(request):
               'page_obj': page_obj,
               }
     if request.method == "GET":
-        return render(request, template, prompt)
+        if request.GET.get('download', None) == 'csv':
+            sale = sale_filters.qs
+            print(sale)
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="sales.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['date sold (yyyy-mm-dd HH:MM)', 'customer name (string)', 'item bought (string)', 'quantity (integer)', 'unit price (float)', 'payment received (float)'])
+            for s in sale:
+                writer.writerow([s.date, s.customer, s.product, s.quantity, s.unit_price, s.payment_received])
+            return response
+        else:
+            return render(request, template, prompt)
     if request.method == 'POST':
         csv_file = request.FILES['file']
         if not csv_file.name.endswith('.csv'):
@@ -192,12 +204,47 @@ def all_sales(request):
 
 
 def stock_search(request):
+    template = 'prod_inventory_app/stock_data.html'
     received = Received.objects.all().order_by('-id')
     received_filters = ReceivedFilter(request.GET, queryset=received)
     received = received_filters.qs
     paginator = Paginator(received, 20)
     page = request.GET.get('page')
     page_obj = paginator.get_page(page)
+    prompt = {'received_filters': received_filters,
+              'page_obj': page_obj,
+        }
+    if request.method == "GET":
+        if request.GET.get('download', None) == 'csv':
+            received = received_filters.qs
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="stock.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['date (yyyy-mm-dd HH:MM)', 'product (string)', 'quantity received (integer)', 'vendor1 (string)', 'cost (float)'])
+            for r in received:
+                writer.writerow([r.date, r.product, r.quantity, r.vendor1, r.unit_price])
+            return response
+        else:
+            return render(request, template, prompt)
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'NOT A CSV FILE')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            _, created = Received.objects.update_or_create(
+                date=column[0],
+                product_id=Product.objects.update_or_create(name=column[1].lower())[0].id,
+                quantity=column[2],
+                vendor1=Vendor.objects.update_or_create(vendor=column[3].lower())[0],
+                unit_price=column[4],
+            )
+        context = {}
+        return render(request, 'prod_inventory_app/success.html', context)
+
     return render(request, 'prod_inventory_app/stock_data.html', {
         'received_filters': received_filters,
         'page_obj': page_obj,
