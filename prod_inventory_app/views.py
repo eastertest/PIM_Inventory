@@ -19,7 +19,7 @@ import os
 from django.contrib.auth.decorators import login_required
 
 def home(request):
-    products = Product.objects.all().order_by('-id')
+    products = Product.objects.all().order_by('id')
     product_filters = ProductFilter(request.GET, queryset=products)
     products = product_filters.qs
     paginator = Paginator(products, 20)
